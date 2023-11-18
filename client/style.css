@@ -1,0 +1,170 @@
+*{
+    margin: 0;
+    padding: 0;
+
+}
+
+body{
+    background-color: rgba(18, 37, 77, 0.885);
+    color: white;
+}
+header>button{
+    padding: 8px 6px;
+    cursor: pointer;
+    float: right;
+    margin-right: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: red;
+    color: white;
+    transition: all 0.4s ease;
+}
+header>button:hover{
+    transform: scale(1.05);
+}
+
+
+.people-container{
+    margin: 20px;
+    width: 80%;
+    margin: 0 auto;
+    height: 90vh;
+    border-radius: 6px;
+    border: 1px solid white;
+    overflow: auto;
+}
+.pc-header{
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.pch-download , .pch-upload{
+    padding: 6px 8px;
+    border: 10px;
+    font-size: 16px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid white;
+}
+
+.pch-download{
+    background-color: rgba(41, 41, 187, 0.538);
+}
+.pch-upload{
+    background-color: rgb(207, 38, 66);
+    float: right;
+}
+
+
+/* Upload Section */
+
+.upload_section{
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    margin: 10px;
+    display: none;
+}
+
+.upload_section>div{
+    font-size: 18px;
+    margin: 10px;
+}
+.upload_section>label{
+width: 95%;
+height: 150px;
+background-color: rgb(173, 182, 199);
+border-radius: 15px;
+border: 2px dashed white;
+font-size: 25px;
+font-weight: bold;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+margin: 10px auto;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+
+
+/* Download Section */
+
+.download_section{
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    margin: 10px;
+    display: none;
+    padding: 10px 20px;  
+}
+
+#myProgress {
+    width: 90%;
+    background-color: #ddd;
+  }
+  
+  #myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #04AA6D;
+  }
+.download_section>div{
+ display: flex;
+ justify-content: space-between;
+ padding: 0 10px;
+ /* width: 100%; */
+}
+
+.file_name{
+width: 70%;
+}
+
+.file_size{
+width: 10%;
+}
+
+.file_download{
+    /* width: 20%; */
+    color: white;
+     background-color: rgba(41, 41, 187, 0.538);
+     padding: 4px 5px;
+     border: 1px solid white;
+     cursor: pointer;
+     margin-bottom: 3px;
+}
+
+button>a{
+    color: white;
+    text-decoration: none;
+}
+
+#output-container{
+    /* width: 100%; */
+    /* color: rgb(102, 102, 245)violet; */
+    /* border: 1px solid white; */
+    /* height: 20px; */
+    /* border-radius: 10px; */
+    overflow: hidden;
+    padding: 4px 3px;
+    /* display: none; */
+}
+.output-txt{
+    color: white;
+    font-size: 16px;
+    
+}
+.output-progess{
+    width: 0%;
+    height: 20px;
+    background-color: violet;
+    border-radius: 10px;
+    text-align: center;
+}
+
+

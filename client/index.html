@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+
+<body onload="downloadButton()">
+    <div>
+        <main>
+            <div id="nearby_people">
+                <div class="people-container">
+                    <div class="pc-header">
+                        <button class="pch-download" onclick="downloadButton()">Downlaod Section</button>
+                        <!-- <div> ip </div> -->
+                        <button class="pch-upload" onclick="uploadButton()">Upload Section</button>
+                    </div>
+                    <div class="pc-body">
+                        <div class="upload_section">
+                            <div>Select or Drop file to Upload</div>
+                            <label for="forFile" id="drop_zone" ondrop="dropHandler(event);"
+                                ondragover="dragOverHandler(event);">+</label>
+                            <input type="file" id="forFile" enctype="multipart/form-data" onchange="submitValue()" multiple="multiple">
+                            <div id="output-container">
+                            </div>
+                        </div>
+                    <hr>
+                        <div class="download_section">
+                            <div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+<script async src="./script.js"></script>
+
+</html>
