@@ -11,7 +11,7 @@ const fs = require("fs");
 const app = express();
 
 
-app.use('/download', express.static('./resource'))
+app.use('/download', express.static('./tmp/resource'))
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client')));
 
@@ -52,13 +52,13 @@ app.get('/getfiles', (req, res) => {
 
   let resObj = [];
 
-  let filesArr = fs.readdir('./resource', (err, files) => {
+  let filesArr = fs.readdir('./tmp/resource', (err, files) => {
     // console.log(typeof (files[2]))
 
     // return files
     files.forEach(file => {
       let obj ={}
-      let stats = fs.statSync("./resource/"+ file)
+      let stats = fs.statSync("./tmp/resource/"+ file)
       let fileSizeInBytes = stats.size;
       obj['file'] = file;
       obj['size'] = fileSizeInBytes;
@@ -82,7 +82,7 @@ const handleError = (err, res) => {
 };
 
 const upload = multer({
-  dest: "/resource"
+  dest: "/tmp/resource"
   // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
@@ -93,7 +93,7 @@ app.post("/upload",
     console.log(req.file)
     const tempPath = req.file.path;
     // const targetPath = path.join(__dirname, "./uploads/image.png");
-    const targetPath = path.join(__dirname, `./resource/${req.file.originalname}`);
+    const targetPath = path.join(__dirname, `./tmp/resource/${req.file.originalname}`);
 
     // if (path.extname(req.file.originalname).toLowerCase() === ".png") {
     if (true) {
@@ -123,7 +123,7 @@ app.get('/filedownload', (req, res) => {
 
   const { name } = req.query;
   console.log("name " + name)
-  const targetPath = path.join(__dirname, `./resource/${name}`);
+  const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
 
   console.log(targetPath)
   try {

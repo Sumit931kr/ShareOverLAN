@@ -1,7 +1,7 @@
 /node_modules
 .env
 
-/resource/*
+/tmp/resource/*
 
 # expect this file
-!/resource/.gitkeep
+!/tmp/resource/.text.txt
