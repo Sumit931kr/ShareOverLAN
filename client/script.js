@@ -1,3 +1,5 @@
+
+
 const downlaodSection = document.querySelector('.download_section');
 
 var count = 0;
@@ -35,16 +37,17 @@ const manageByte = (num) => {
 const getDownloadFiles = async () => {
   const response = await axios.get('/getFiles');
   let data = response.data;
-
+console.log(data)
   if (data.length > 0) {
-
-    let mappedData = data.map((el, index) => {
-      // console.log(el.file)
+    let mappedData = data.sort((b, a)=> {return a?.fileModifiedTime - b?.fileModifiedTime}).map((el, index) => {
+         // <div class="file_view">
+      // <a href="/viewfile?name=${el.file}" target="_blank"> View </a>
+      //  </div>
       return `<div key="${index}"> 
-      <div class="file_name">${el.file}</div>
-      <div class="file_size">${manageByte(el.size)}</div>
+      <div class="file_name">${el.fileName}</div>
+      <div class="file_size">${manageByte(el.fileSize)}</div>
       <button class="file_download">
-      <a href="/filedownload?name=${el.file}" target="_blank">Download</a>
+      <a href="/filedownload?name=${el.fileName}" target="_blank">Download</a>
       </button>
       </div>
       <hr/>

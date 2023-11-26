@@ -1,11 +1,11 @@
 const express = require('express')
-const cors = require('cors'); 
+const cors = require('cors');
 const dotenv = require('dotenv');
 
 dotenv.config();
 const os = require('os');
 
-const PORT =  process.env.PORT
+const PORT = process.env.PORT
 const path = require("path");
 const fs = require("fs");
 const app = express();
@@ -17,26 +17,14 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 const multer = require("multer");
 
+const upload = multer({
+  dest: "/tmp/resource"
+  // you might also want to set some limits: https://github.com/expressjs/multer#limits
+});
 
-function getLocalIpAddress() {
-  const interfaces = os.networkInterfaces();
-  let ipAddress;
 
-  for (const key in interfaces) {
-    for (const iface of interfaces[key]) {
-      if (iface.family === 'IPv4' && !iface.internal) {
-        ipAddress = iface.address;
-        break;
-      }
-    }
-    if (ipAddress) break;
-  }
 
-  return ipAddress || 'Unable to retrieve local IP address';
-}
-
-const localIpAddress = getLocalIpAddress();
-
+// Sending the index.html file 
 app.get('/', (req, res) => {
   // console.log(req)
   // var ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
@@ -47,7 +35,7 @@ app.get('/', (req, res) => {
 
 })
 
-
+// Send Array of Downloadable file
 app.get('/getfiles', (req, res) => {
 
   let resObj = [];
@@ -57,12 +45,15 @@ app.get('/getfiles', (req, res) => {
 
     // return files
     files.forEach(file => {
-      let obj ={}
-      let stats = fs.statSync("./tmp/resource/"+ file)
+      let obj = {}
+      let stats = fs.statSync("./tmp/resource/" + file)
+
       let fileSizeInBytes = stats.size;
-      obj['file'] = file;
-      obj['size'] = fileSizeInBytes;
-      
+      var fileModifiedTime = new Date(stats.mtime).getTime()
+      obj['fileName'] = file;
+      obj['fileSize'] = fileSizeInBytes;
+      obj['fileModifiedTime'] = fileModifiedTime;
+
       resObj.push(obj);
     });
 
@@ -81,12 +72,7 @@ const handleError = (err, res) => {
     .end("Oops! Something went wrong!");
 };
 
-const upload = multer({
-  dest: "/tmp/resource"
-  // you might also want to set some limits: https://github.com/expressjs/multer#limits
-});
-
-
+// Code for Uploading the File
 app.post("/upload",
   upload.single("file" /* name attribute of <file> element in your form */),
   (req, res) => {
@@ -118,9 +104,8 @@ app.post("/upload",
   }
 );
 
+// Sending the file to download 
 app.get('/filedownload', (req, res) => {
-  console.log("sumti is shere")
-
   const { name } = req.query;
   console.log("name " + name)
   const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
@@ -136,37 +121,37 @@ app.get('/filedownload', (req, res) => {
 
 })
 
-// async function getIpAddress() {
-  // const pc = new RTCPeerConnection();
-  // pc.createDataChannel('');
+// View file 
+app.get('/viewfile', (req, res) => {
+  const { name } = req.query;
+  const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
+  try {
+    console.log(targetPath)
+    res.sendFile(targetPath)
+  } catch (error) {
+    console.log("error " + error)
+    res.send('Something Went wrong')
+  }
+})
 
-  // pc.createOffer()
-  //     .then(offer => pc.setLocalDescription(offer))
-  //     .catch(error => console.error('Error creating offer:', error));
 
-  // pc.onicecandidate = event => {
-  //     if (event.candidate) {
-  //       console.log(event)
-  //         const ipRegex = /\d+\.\d+\.\d+\.\d+/;
-  //         const ipAddress = ipRegex.exec(event.candidate.candidate);
-  //         // document.getElementById('ip').innerText = ipAddress;
-  //         console.log("ip "+ ipAddress)
-         
-  //         return ipAddress;
-  //     }
-  // };
-//  await fetch('https://api.ipify.org?format=json')
-//         .then(response => response.json())
-//         .then(data => {
-//             // Logging IP address to console
-//             console.log('Your IP address is ' + data.ip);
-//         })
-// }
+const getLocalIpAddress = () => {
+  const interfaces = os.networkInterfaces();
+  let ipAddress;
+  for (const key in interfaces) {
+    for (const iface of interfaces[key]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        ipAddress = iface.address;
+        break;
+      }
+    }
+    if (ipAddress) break;
+  }
+  return ipAddress || 'Unable to retrieve local IP address';
+}
 
-// console.log(getIpAddress());
 
-// console.log('Local IP Address:', localIpAddress);
-
+const localIpAddress = getLocalIpAddress();
 
 app.listen(PORT, () => {
   console.log("Server is Listening at ");
