@@ -4,4 +4,4 @@
 /tmp/resource/*
 
 # expect this file
-!/tmp/resource/.text.txt
+!/tmp/resource/text.txt
