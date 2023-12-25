@@ -107,18 +107,23 @@ app.post("/upload",
 // Sending the file to download 
 app.get('/filedownload', (req, res) => {
   const { name } = req.query;
-  console.log("name " + name)
   const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
 
-  console.log(targetPath)
   try {
-    res.download(targetPath)
+    const stream = fs.createReadStream(targetPath);
+    const stats = fs.statSync(targetPath);
+    const fileSize = stats.size;
+
+    stream.on('open', () => {
+      res.set('Content-Type', '*');
+      res.setHeader('Content-disposition', `attachment; filename=${targetPath.split('\\').pop()}`);
+      res.setHeader('Content-Length', fileSize);
+      stream.pipe(res);
+    })
   } catch (error) {
     console.log("error " + error)
     res.send('Something Went wrong')
   }
-  // res.send('us')
-
 })
 
 // View file 
@@ -134,7 +139,6 @@ app.get('/viewfile', (req, res) => {
   }
 })
 
-
 const getLocalIpAddress = () => {
   const interfaces = os.networkInterfaces();
   let ipAddress;
@@ -145,11 +149,11 @@ const getLocalIpAddress = () => {
         break;
       }
     }
-    if (ipAddress) break;
+    // if (ipAddress) break;
   }
+  // console.log(ipAddress)
   return ipAddress || 'Unable to retrieve local IP address';
 }
-
 
 const localIpAddress = getLocalIpAddress();
 
@@ -157,4 +161,5 @@ app.listen(PORT, () => {
   console.log("Server is Listening at ");
   console.log(`http://${localIpAddress}:${PORT}`);
 })
+
 

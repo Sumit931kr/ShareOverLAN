@@ -3,5 +3,7 @@
 
 /tmp/resource/*
 
+/run.exe
+/run.js
 # expect this file
 !/tmp/resource/text.txt

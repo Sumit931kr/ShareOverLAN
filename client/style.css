@@ -26,8 +26,8 @@ header>button:hover{
 
 .people-container{
     margin: 20px;
-    width: 80%;
-    margin: 0 auto;
+    width: 1000px;
+    margin: 0 30px;
     height: 90vh;
     border-radius: 6px;
     border: 1px solid white;
