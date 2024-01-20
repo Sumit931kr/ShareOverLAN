@@ -44,8 +44,7 @@ const getDownloadFiles = async () => {
       return `<div key="${index}"> 
       <div class="file_name">${el.fileName}</div>
       <div class="file_size">${manageByte(el.fileSize)}</div>
-      <button class="file_download">
-      <a href="/filedownload?name=${el.fileName}" target="_blank">Download</a>
+      <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
       </button>
       </div>
       <hr/>
@@ -56,11 +55,81 @@ const getDownloadFiles = async () => {
 
     // console.log(mappedData)
   }
-
   //  downloadButton();
-
-
 }
+
+
+const downloadFile = async (str) => {
+  console.log(str);
+
+  const options = {
+    responseType: 'blob',
+    onDownloadProgress: function (progressEvent) {
+      var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      console.log(percentCompleted);
+    },
+  };
+
+  try {
+    const response = await axios.get('/filedownload?name=' + str, options);
+
+    // Create a blob from the response data
+    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+
+    // Specify the desired file name and extension
+    link.download = str;
+
+    // Append the link to the document
+    document.body.appendChild(link);
+
+    // Trigger a click on the link to initiate the download
+    link.click();
+
+    // Remove the link from the document
+    document.body.removeChild(link);
+
+    console.log('File download initiated successfully!');
+  } catch (error) {
+    console.error('Error downloading file:', error.message);
+  }
+};
+
+// Example usage
+// downloadFile('exampleFileName');
+
+
+// const downloadFile = async(str) =>{
+//   console.log(str);
+//   const options = {
+//     // Defines options for request
+    
+//       responseType: 'blob',
+//       // For a file (e.g. image, audio), response should be read to Blob (default to JS object from JSON)
+    
+//       onDownloadProgress: function(progressEvent) {
+//       // Function fires when there is download progress
+//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);   
+//       console.log(percentCompleted)
+//           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
+//           // Logs percentage complete to the console
+    
+//       }
+    
+//     }
+    
+//     axios.get('/filedownload?name='+str, options)
+//     // Request with options as second parameter
+//       .then(res => console.log(res.save()))
+//       .catch(err => console.log(err))
+    
+
+
+// }
+
 
 const searchNearbyPeople = async () => {
   console.log("just clicked");
