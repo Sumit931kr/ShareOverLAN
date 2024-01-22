@@ -2,6 +2,9 @@ const express = require('express')
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+const mime = require('mime');
+
+
 dotenv.config();
 const os = require('os');
 
@@ -106,8 +109,14 @@ app.post("/upload",
 
 // Sending the file to download 
 app.get('/filedownload', (req, res) => {
-  const { name } = req.query;
-  const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
+  
+    const { name } = req.query;
+    const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
+
+  if (!fs.existsSync(targetPath)) {
+    return res.status(404).send('File not found');
+  }
+  
 
   try {
     const stream = fs.createReadStream(targetPath);
@@ -115,7 +124,8 @@ app.get('/filedownload', (req, res) => {
     const fileSize = stats.size;
 
     stream.on('open', () => {
-      res.set('Content-Type', '*');
+      const mimeType = mime.getType(targetPath);
+      res.set('Content-Type', mimeType || 'application/octet-stream');
       res.setHeader('Content-disposition', `attachment; filename=${targetPath.split('\\').pop()}`);
       res.setHeader('Content-Length', fileSize);
       stream.pipe(res);

@@ -1,12 +1,21 @@
 const downlaodSection = document.querySelector('.download_section');
 
-var count = 0;
+// var count = 0;
 const uploadSection = document.querySelector('.upload_section');
 // var output = document.getElementById('output');
 // var outputText =  document.querySelector('.output-txt');
 let nearbyPeopleContainer = document.getElementById('nearby_people')
 const outPutContainer = document.getElementById('output-container');
 
+// const https = require('https');
+// const agent = new https.Agent({  
+// rejectUnauthorized: false
+// });
+const axiosInstance = axios.create({
+  responseType: 'blob',
+  // httpsAgent: agent,
+  // Other common configuration options can be set here
+});
 
 var shouldContinue = true;
 
@@ -37,8 +46,8 @@ const getDownloadFiles = async () => {
   let data = response.data;
 
   if (data.length > 0) {
-    let mappedData = data.sort((b, a)=> {return a?.fileModifiedTime - b?.fileModifiedTime}).map((el, index) => {
-         // <div class="file_view">
+    let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
+      // <div class="file_view">
       // <a href="/viewfile?name=${el.file}" target="_blank"> View </a>
       //  </div>
       return `<div key="${index}"> 
@@ -58,24 +67,50 @@ const getDownloadFiles = async () => {
   //  downloadButton();
 }
 
+var downloadArr = [];
 
 const downloadFile = async (str) => {
-  console.log(str);
+  downloadArr.push(str);
+
+let dcount = downloadArr.indexOf(str);
+
+  let downloadContainer = document.querySelector('.downloadContainer');
+  let div = document.createElement('div');
+  let innerHTML = `<div class="doutput-txt-${dcount}">${str}</div>
+  <div class="doutput-${dcount} output-progess"></div>`
+
+  div.innerHTML = innerHTML;
+  downloadContainer.append(div)
+
+  // console.log(str);
+
 
   const options = {
     responseType: 'blob',
+
     onDownloadProgress: function (progressEvent) {
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-      console.log(percentCompleted);
+      // console.log(progressEvent)
+      var doutput = document.querySelector('.doutput-' + dcount);
+      console.log(dcount)
+      doutput.style.width = `${percentCompleted}%`
+      doutput.innerHTML = percentCompleted + "%"
+      if (percentCompleted == 100) {
+        doutput.innerHTML = "File downloaded Successfully"
+      }
     },
   };
 
+
+
   try {
-    const response = await axios.get('/filedownload?name=' + str, options);
+    // const response = await axios.get('/filedownload?name=' + str, options);
+    const response = await axiosInstance.get('/filedownload?name=' + str, options);
 
     // Create a blob from the response data
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
+    console.log(blob)
     // Create a link element
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -95,6 +130,13 @@ const downloadFile = async (str) => {
     console.log('File download initiated successfully!');
   } catch (error) {
     console.error('Error downloading file:', error.message);
+    if (axios.isAxiosError(error)) {
+      console.error('Axios Error:', error.message);
+      // Handle Axios-specific errors (e.g., network errors)
+    } else {
+      console.error('General Error:', error.message);
+      // Handle other types of errors
+    }
   }
 };
 
@@ -106,26 +148,26 @@ const downloadFile = async (str) => {
 //   console.log(str);
 //   const options = {
 //     // Defines options for request
-    
+
 //       responseType: 'blob',
 //       // For a file (e.g. image, audio), response should be read to Blob (default to JS object from JSON)
-    
+
 //       onDownloadProgress: function(progressEvent) {
 //       // Function fires when there is download progress
 //       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);   
 //       console.log(percentCompleted)
 //           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
 //           // Logs percentage complete to the console
-    
+
 //       }
-    
+
 //     }
-    
+
 //     axios.get('/filedownload?name='+str, options)
 //     // Request with options as second parameter
 //       .then(res => console.log(res.save()))
 //       .catch(err => console.log(err))
-    
+
 
 
 // }
@@ -141,29 +183,43 @@ const searchNearbyPeople = async () => {
 }
 
 
-var config = {
-  onUploadProgress: function (progressEvent) {
-    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-    // console.log(progressEvent)
-    var output = document.querySelector('.output-' + count);
-    console.log()
-    output.style.width = `${percentCompleted}%`
-    output.innerHTML = percentCompleted + "%"
-  }
-};
 
+
+var uploadArr = [];
 
 const fileUploadCode = async (file) => {
+
+uploadArr.push(file?.name);
+let count =  uploadArr.indexOf(file?.name);
+
   shouldContinue = false;
   let pDiv = document.createElement('div');
   let innerhtml = `<div class="output-txt-${count}">${file?.name}</div>
-  <div class="output-${count} output-progess"></div>`
+                   <div class="output-${count} output-progess"></div>`
+
   pDiv.innerHTML = innerhtml;
   outPutContainer.appendChild(pDiv);
+
+
+  var config = {
+    onUploadProgress: function (progressEvent) {
+      var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      // console.log(progressEvent)
+      var output = document.querySelector('.output-' + count);
+      // console.log()
+      output.style.width = `${percentCompleted}%`
+      output.innerHTML = percentCompleted + "%"
+      if (percentCompleted == 100) {
+        output.innerHTML = "File Uploaded Successfully"
+      }
+    }
+  };
+
+
   var formdata = new FormData();
   formdata.append('file', file)
   await axios.post('/upload', formdata, config)
-    .then(function (res) {
+  .then(function (res) {
       count++;
       myNum++;
       fileArrForCall(curFiles);
@@ -230,9 +286,9 @@ var curFiles
 const submitValue = (ev) => {
   const inputFile = document.getElementById('forFile');
   curFiles = inputFile.files;
-  
+
   fileArrForCall(curFiles);
-  document.getElementById('drop_zone').style.pointerEvents = "none";
+  // document.getElementById('drop_zone').style.pointerEvents = "none";
   // for (const file of curFiles) {
   //   if (shouldContinue) {
   //     fileUploadCode(file)
@@ -246,6 +302,6 @@ const fileArrForCall = (files) => {
   }
   else {
     myNum = 0;
-    document.getElementById('drop_zone').style.pointerEvents = "visible";
+    // document.getElementById('drop_zone').style.pointerEvents = "visible";
   }
 }
