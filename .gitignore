@@ -5,6 +5,6 @@
 
 /run.exe
 /run.exe *
-/run.js
+# /run.js
 # expect this file
 !/tmp/resource/text.txt
