@@ -1,4 +1,7 @@
+let downloadContainer = document.querySelector('.downloadContainer');
 const downlaodSection = document.querySelector('.download_section');
+
+var zip = new JSZip();
 
 // var count = 0;
 const uploadSection = document.querySelector('.upload_section');
@@ -38,8 +41,8 @@ const manageByte = (num) => {
     sizeCounter = 0;
     return res.toFixed(2) + sizeMeter[value]
   }
-
 }
+
 
 const getDownloadFiles = async () => {
   const response = await axios.get('/getFiles');
@@ -50,13 +53,15 @@ const getDownloadFiles = async () => {
       // <div class="file_view">
       // <a href="/viewfile?name=${el.file}" target="_blank"> View </a>
       //  </div>
-      return `<div key="${index}"> 
-      <div class="file_name">${el.fileName}</div>
-      <div class="file_size">${manageByte(el.fileSize)}</div>
-      <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
-      </button>
+      return `
+      <div key="${index}"> 
+       <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
+        <div class="file_name">${el.fileName}</div>
+        <div class="file_size">${manageByte(el.fileSize)}</div>
+        <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
+         </button>
       </div>
-      <hr/>
+        <hr/>
       <br>
       `
     }).join("")
@@ -69,12 +74,115 @@ const getDownloadFiles = async () => {
 
 var downloadArr = [];
 
+const getZipDownload = () => {
+  let checkArr = document.querySelectorAll('input[type=checkbox]:checked');
+  let downloadAbleFile = [];
+
+  checkArr.forEach(el => {
+    downloadAbleFile.push(el.value);
+  });
+
+  // console.log(downloadAbleFile);
+
+  try {
+
+    var count = 0;
+    var zipFilename = "bundle.zip";
+
+    if(downloadAbleFile.length <= 0) return 
+
+    downloadAbleFile.forEach(async function (el, i) {
+
+      downloadArr.push(el);
+      let dcount = downloadArr.indexOf(el);
+      let div = document.createElement('div');
+      let innerHTML = `<div class="doutput-txt-${dcount}">${el}</div>
+      <div class="doutput-${dcount} output-progess"></div>`
+      div.innerHTML = innerHTML;
+      downloadContainer.append(div)
+    
+
+      const options = {
+        responseType: 'blob',
+        onDownloadProgress: function (progressEvent) {
+          var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          // console.log(progressEvent)
+          var doutput = document.querySelector('.doutput-' + dcount);
+          // console.log(dcount)
+          doutput.style.width = `${percentCompleted}%`
+          doutput.innerHTML = percentCompleted + "%"
+          if (percentCompleted == 100) {
+            doutput.innerHTML = "File downloaded Successfully"
+          }
+        },
+      };
+    
+
+      // console.log(i)
+      var filename = el
+      const response = await axiosInstance.get('/filedownload?name=' + filename, options);
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      var img = zip.folder("folder");
+      // loading a file and add it in a zip file
+      img.file(filename, blob, { binary: true });
+      count++
+      if (count == downloadAbleFile.length) {
+        zip.generateAsync({ type: 'blob' }).then(function (content) {
+          saveAs(content, zipFilename);
+        });
+      }
+
+      let index = downloadArr.indexOf(el);
+      downloadArr[index] = downloadArr[index] + Math.random(1);
+    })
+
+  } catch (error) {
+    console.error('Error downloading file:', error.message);
+    if (axios.isAxiosError(error)) {
+      console.error('Axios Error:', error.message);
+      // Handle Axios-specific errors (e.g., network errors)
+    } else {
+      console.error('General Error:', error.message);
+      // Handle other types of errors
+    }
+  }
+  clearAllcheckbox();
+}
+
+const clearAllcheckbox = () => {
+  let checkArr = document.querySelectorAll('input[type=checkbox]');
+  checkArr.forEach((el)=>{
+    el.checked = false;
+  })
+
+
+}
+
+const buttonDisabledTrue = () =>{
+  let buttons = document.querySelectorAll('.file_download')
+  buttons.forEach((el)=>{
+    el.disabled = true;
+    el.style.opacity = "0.4";
+    el.style.cursor = "no-drop";
+  })
+}
+
+const buttonDisabledFalse = () =>{
+  let buttons = document.querySelectorAll('.file_download')
+  buttons.forEach((el)=>{
+    el.disabled = false;
+    el.style.opacity = "1";
+    el.style.cursor = "pointer";
+  })
+}
+
+
+
 const downloadFile = async (str) => {
   downloadArr.push(str);
 
-let dcount = downloadArr.indexOf(str);
+  let dcount = downloadArr.indexOf(str);
 
-  let downloadContainer = document.querySelector('.downloadContainer');
   let div = document.createElement('div');
   let innerHTML = `<div class="doutput-txt-${dcount}">${str}</div>
   <div class="doutput-${dcount} output-progess"></div>`
@@ -82,8 +190,13 @@ let dcount = downloadArr.indexOf(str);
   div.innerHTML = innerHTML;
   downloadContainer.append(div)
 
-  // console.log(str);
+  // // const response = await axios.get('/filedownload?name=' + str, options);
+  // const response = await axiosInstance.get('/filedownload?name=' + str, options);
 
+  // // Create a blob from the response data
+  // const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+  // console.log(str);
 
   const options = {
     responseType: 'blob',
@@ -92,7 +205,7 @@ let dcount = downloadArr.indexOf(str);
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
       // console.log(progressEvent)
       var doutput = document.querySelector('.doutput-' + dcount);
-      console.log(dcount)
+      // console.log(dcount)
       doutput.style.width = `${percentCompleted}%`
       doutput.innerHTML = percentCompleted + "%"
       if (percentCompleted == 100) {
@@ -101,12 +214,11 @@ let dcount = downloadArr.indexOf(str);
     },
   };
 
-
-
   try {
     // const response = await axios.get('/filedownload?name=' + str, options);
     const response = await axiosInstance.get('/filedownload?name=' + str, options);
 
+    console.log(response.data)
     // Create a blob from the response data
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
@@ -138,6 +250,10 @@ let dcount = downloadArr.indexOf(str);
       // Handle other types of errors
     }
   }
+
+  let index = downloadArr.indexOf(str);
+  downloadArr[index] = downloadArr[index] + Math.random(1);
+
 };
 
 // Example usage
@@ -189,8 +305,8 @@ var uploadArr = [];
 
 const fileUploadCode = async (file) => {
 
-uploadArr.push(file?.name);
-let count =  uploadArr.indexOf(file?.name);
+  uploadArr.push(file?.name);
+  let count = uploadArr.indexOf(file?.name);
 
   shouldContinue = false;
   let pDiv = document.createElement('div');
@@ -219,7 +335,7 @@ let count =  uploadArr.indexOf(file?.name);
   var formdata = new FormData();
   formdata.append('file', file)
   await axios.post('/upload', formdata, config)
-  .then(function (res) {
+    .then(function (res) {
       count++;
       myNum++;
       fileArrForCall(curFiles);
@@ -305,3 +421,26 @@ const fileArrForCall = (files) => {
     // document.getElementById('drop_zone').style.pointerEvents = "visible";
   }
 }
+
+
+setTimeout(() => {
+  const inputcheckboxArr = document.querySelectorAll('.inputcheckbox');
+  const donwloadAll = document.querySelector('.pch-downloadAll');
+  
+  // console.log(inputcheckboxArr)
+  inputcheckboxArr.forEach((input)=>{
+    input.addEventListener('click',(el)=>{
+      const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');;
+
+      if(inputchecked.length > 0){
+        buttonDisabledTrue();
+        donwloadAll.style.display = "block";
+      }
+      else{
+        buttonDisabledFalse();
+        donwloadAll.style.display = "none";
+      }
+     
+  })
+  })
+}, 1000);

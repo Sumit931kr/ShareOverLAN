@@ -23,6 +23,7 @@
                     <div class="pc-header">
                         <button class="pch-download" onclick="downloadButton()">Downlaod Section</button>
                         <!-- <div> ip </div> -->
+                        <button class="pch-downloadAll" onclick="getZipDownload()">Download All</button>
                         <button class="pch-upload" onclick="uploadButton()">Upload Section</button>
                     </div>
                     <div class="pc-body">
@@ -51,5 +52,6 @@
 
 </body>
 <script async src="./script.js"></script>
-
+<script src="jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
 </html>

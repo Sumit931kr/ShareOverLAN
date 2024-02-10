@@ -39,7 +39,7 @@ header>button:hover{
     align-items: center;
     justify-content: space-between;
 }
-.pch-download , .pch-upload{
+.pch-download , .pch-upload, .pch-downloadAll{
     padding: 6px 8px;
     border: 10px;
     font-size: 16px;
@@ -47,6 +47,11 @@ header>button:hover{
     border-radius: 5px;
     cursor: pointer;
     border: 1px solid white;
+}
+
+.pch-downloadAll{
+background-color: green;
+display: none;
 }
 
 .pch-download{

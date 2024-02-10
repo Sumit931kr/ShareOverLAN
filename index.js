@@ -109,14 +109,14 @@ app.post("/upload",
 
 // Sending the file to download 
 app.get('/filedownload', (req, res) => {
-  
-    const { name } = req.query;
-    const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
+
+  const { name } = req.query;
+  const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
 
   if (!fs.existsSync(targetPath)) {
     return res.status(404).send('File not found');
   }
-  
+
 
   try {
     const stream = fs.createReadStream(targetPath);

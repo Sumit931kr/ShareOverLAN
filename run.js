@@ -60,6 +60,3 @@ qr.toString(data, {type:'terminal'},(err, code)=>{
   console.log(code)
 })
 
-
-
-
