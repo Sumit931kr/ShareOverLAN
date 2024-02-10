@@ -1,8 +1,10 @@
 let downloadContainer = document.querySelector('.downloadContainer');
 const downlaodSection = document.querySelector('.download_section');
 
-var zip = new JSZip();
 
+
+
+const downloadAll = document.querySelector('.pch-downloadAll');
 // var count = 0;
 const uploadSection = document.querySelector('.upload_section');
 // var output = document.getElementById('output');
@@ -89,7 +91,9 @@ const getZipDownload = () => {
     var count = 0;
     var zipFilename = "bundle.zip";
 
-    if(downloadAbleFile.length <= 0) return 
+    if (downloadAbleFile.length <= 0) return
+
+    var zip = new JSZip();
 
     downloadAbleFile.forEach(async function (el, i) {
 
@@ -100,7 +104,7 @@ const getZipDownload = () => {
       <div class="doutput-${dcount} output-progess"></div>`
       div.innerHTML = innerHTML;
       downloadContainer.append(div)
-    
+
 
       const options = {
         responseType: 'blob',
@@ -116,9 +120,11 @@ const getZipDownload = () => {
           }
         },
       };
-    
+
 
       // console.log(i)
+
+
       var filename = el
       const response = await axiosInstance.get('/filedownload?name=' + filename, options);
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -147,36 +153,37 @@ const getZipDownload = () => {
     }
   }
   clearAllcheckbox();
+  buttonDisabledFalse();
+  downloadAll.style.display = "none";
+  
 }
 
 const clearAllcheckbox = () => {
   let checkArr = document.querySelectorAll('input[type=checkbox]');
-  checkArr.forEach((el)=>{
+  checkArr.forEach((el) => {
     el.checked = false;
   })
 
 
 }
 
-const buttonDisabledTrue = () =>{
+const buttonDisabledTrue = () => {
   let buttons = document.querySelectorAll('.file_download')
-  buttons.forEach((el)=>{
+  buttons.forEach((el) => {
     el.disabled = true;
     el.style.opacity = "0.4";
     el.style.cursor = "no-drop";
   })
 }
 
-const buttonDisabledFalse = () =>{
+const buttonDisabledFalse = () => {
   let buttons = document.querySelectorAll('.file_download')
-  buttons.forEach((el)=>{
+  buttons.forEach((el) => {
     el.disabled = false;
     el.style.opacity = "1";
     el.style.cursor = "pointer";
   })
 }
-
-
 
 const downloadFile = async (str) => {
   downloadArr.push(str);
@@ -299,8 +306,6 @@ const searchNearbyPeople = async () => {
 }
 
 
-
-
 var uploadArr = [];
 
 const fileUploadCode = async (file) => {
@@ -387,11 +392,16 @@ const downloadButton = async () => {
   uploadSection.style.display = 'none';
   downlaodSection.style.display = 'inline';
   getDownloadFiles();
+  callme();
 }
 
 const uploadButton = async () => {
   downlaodSection.style.display = 'none';
   uploadSection.style.display = 'inline';
+
+
+  buttonDisabledFalse();
+  downloadAll.style.display = "none";
 
 }
 
@@ -422,25 +432,29 @@ const fileArrForCall = (files) => {
   }
 }
 
+const callme =() =>{
 
-setTimeout(() => {
-  const inputcheckboxArr = document.querySelectorAll('.inputcheckbox');
-  const donwloadAll = document.querySelector('.pch-downloadAll');
-  
-  // console.log(inputcheckboxArr)
-  inputcheckboxArr.forEach((input)=>{
-    input.addEventListener('click',(el)=>{
-      const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');;
-
-      if(inputchecked.length > 0){
+  setTimeout(() => {
+    const inputcheckboxArr = document.querySelectorAll('.inputcheckbox');
+    
+    const downloadAll = document.querySelector('.pch-downloadAll');
+    // console.log(inputcheckboxArr)
+    inputcheckboxArr.forEach((input) => {
+      input.addEventListener('click', (el) => {
+      // console.log(el)
+      const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');
+      // console.log(inputchecked.length)
+      if (inputchecked.length > 0) {
         buttonDisabledTrue();
-        donwloadAll.style.display = "block";
+        downloadAll.style.display = "block"
       }
-      else{
+      else {
         buttonDisabledFalse();
-        donwloadAll.style.display = "none";
+        downloadAll.style.display = "none";
       }
-     
+      
+    })
   })
-  })
-}, 1000);
+}, 500);
+}
+callme();
