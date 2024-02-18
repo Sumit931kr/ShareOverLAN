@@ -99,9 +99,11 @@ const getZipDownload = () => {
 
       downloadArr.push(el);
       let dcount = downloadArr.indexOf(el);
-      let div = document.createElement('div');
+      let div = document.createElement('p');
+      div.style.padding = "10px";
       let innerHTML = `<div class="doutput-txt-${dcount}">${el}</div>
-      <div class="doutput-${dcount} output-progess"></div>`
+                       <div class="doutput-${dcount} output-progess"></div>`
+
       div.innerHTML = innerHTML;
       downloadContainer.append(div)
 
@@ -155,7 +157,7 @@ const getZipDownload = () => {
   clearAllcheckbox();
   buttonDisabledFalse();
   downloadAll.style.display = "none";
-  
+
 }
 
 const clearAllcheckbox = () => {
@@ -390,14 +392,14 @@ const dragOverHandler = (ev) => {
 
 const downloadButton = async () => {
   uploadSection.style.display = 'none';
-  downlaodSection.style.display = 'inline';
+  downlaodSection.style.display = 'flex';
   getDownloadFiles();
   callme();
 }
 
 const uploadButton = async () => {
   downlaodSection.style.display = 'none';
-  uploadSection.style.display = 'inline';
+  uploadSection.style.display = 'flex';
 
 
   buttonDisabledFalse();
@@ -432,29 +434,29 @@ const fileArrForCall = (files) => {
   }
 }
 
-const callme =() =>{
+const callme = () => {
 
   setTimeout(() => {
     const inputcheckboxArr = document.querySelectorAll('.inputcheckbox');
-    
+
     const downloadAll = document.querySelector('.pch-downloadAll');
     // console.log(inputcheckboxArr)
     inputcheckboxArr.forEach((input) => {
       input.addEventListener('click', (el) => {
-      // console.log(el)
-      const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');
-      // console.log(inputchecked.length)
-      if (inputchecked.length > 0) {
-        buttonDisabledTrue();
-        downloadAll.style.display = "block"
-      }
-      else {
-        buttonDisabledFalse();
-        downloadAll.style.display = "none";
-      }
-      
+        // console.log(el)
+        const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');
+        // console.log(inputchecked.length)
+        if (inputchecked.length > 0) {
+          buttonDisabledTrue();
+          downloadAll.style.display = "block"
+        }
+        else {
+          buttonDisabledFalse();
+          downloadAll.style.display = "none";
+        }
+
+      })
     })
-  })
-}, 500);
+  }, 500);
 }
 callme();

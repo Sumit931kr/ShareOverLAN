@@ -1,14 +1,15 @@
-*{
+* {
     margin: 0;
     padding: 0;
 
 }
 
-body{
+body {
     background-color: rgba(18, 37, 77, 0.885);
     color: white;
 }
-header>button{
+
+header>button {
     padding: 8px 6px;
     cursor: pointer;
     float: right;
@@ -19,27 +20,40 @@ header>button{
     color: white;
     transition: all 0.4s ease;
 }
-header>button:hover{
+
+header>button:hover {
     transform: scale(1.05);
 }
 
 
-.people-container{
-    margin: 20px;
-    width: 1000px;
-    margin: 0 30px;
-    height: 90vh;
+.people-container {
+    /* margin: 20px; */
+    /* width: 1000px; */
+    /* margin: 0 30px; */
+    /* height: 98vh; */
     border-radius: 6px;
     border: 1px solid white;
     overflow: auto;
+    position: relative;
 }
-.pc-header{
+.header-section{
+    position: fixed;
+    background-color:rgb(44 61 97);
+    width: 100%;
+    top: 0%;
+    border-bottom: 1px solid white;
+}
+
+.pc-header {
     margin: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.pch-download , .pch-upload, .pch-downloadAll{
+
+.pch-download,
+.pch-upload,
+.pch-downloadAll {
     padding: 6px 8px;
     border: 10px;
     font-size: 16px;
@@ -49,47 +63,53 @@ header>button:hover{
     border: 1px solid white;
 }
 
-.pch-downloadAll{
-background-color: green;
-display: none;
+.pch-downloadAll {
+    background-color: green;
+    display: none;
 }
 
-.pch-download{
+.pch-download {
     background-color: rgba(41, 41, 187, 0.538);
 }
-.pch-upload{
+
+.pch-upload {
     background-color: rgb(207, 38, 66);
     float: right;
 }
 
+.downloadContainer{
+    padding: 10px;
+}
 
 /* Upload Section */
 
-.upload_section{
+.upload_section {
     display: flex;
     gap: 15px;
     flex-direction: column;
     margin: 10px;
     display: none;
+    margin-top: 90px;
 }
 
-.upload_section>div{
+.upload_section>div {
     font-size: 18px;
     margin: 10px;
 }
-.upload_section>label{
-width: 95%;
-height: 150px;
-background-color: rgb(173, 182, 199);
-border-radius: 15px;
-border: 2px dashed white;
-font-size: 25px;
-font-weight: bold;
-display: flex;
-justify-content: center;
-align-items: center;
-cursor: pointer;
-margin: 10px auto;
+
+.upload_section>label {
+    width: 95%;
+    height: 150px;
+    background-color: rgb(173, 182, 199);
+    border-radius: 15px;
+    border: 2px dashed white;
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 10px auto;
 }
 
 input[type="file"] {
@@ -100,40 +120,46 @@ input[type="file"] {
 
 /* Download Section */
 
-.download_section{
+.download_section {
     display: flex;
-    gap: 15px;
+    /* gap: 15px; */
     flex-direction: column;
-    margin: 10px;
+    /* margin: 10px; */
     display: none;
-    padding: 10px 20px;  
+    /* padding: 10px 20px; */
+    padding-top: 90px;
 }
 
 #myProgress {
     width: 90%;
     background-color: #ddd;
-  }
-  
-  #myBar {
+}
+
+#myBar {
     width: 1%;
     height: 30px;
     background-color: #04AA6D;
-  }
-.download_section>div{
- display: flex;
- justify-content: space-between;
- padding: 0 10px;
- /* width: 100%; */
 }
 
-.file_name{
-width: 70%;
-/* width: 55%; */
+.download_section>div {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    gap: 10px;
+    align-items: flex-start;
+    /* width: 100%; */
 }
 
-.file_size{
-width: 10%;
+.file_name {
+    width: 45%;
+    word-wrap: break-word;
+    /* width: 55%; */
 }
+
+.file_size {
+    width: 20%;
+}
+
 /* 
 .file_view{
     color: white;
@@ -146,22 +172,23 @@ align-items: center;
 }
  */
 
-.file_download{
+.file_download {
     /* width: 20%; */
     color: white;
-     background-color: rgba(41, 41, 187, 0.538);
-     padding: 4px 5px;
-     border: 1px solid white;
-     cursor: pointer;
-     margin-bottom: 3px;
+    background-color: rgba(41, 41, 187, 0.538);
+    padding: 4px 5px;
+    border: 1px solid white;
+    cursor: pointer;
+    margin-bottom: 3px;
 }
 
-button>a , .file_view>a{
+button>a,
+.file_view>a {
     color: white;
     text-decoration: none;
 }
 
-#output-container{
+#output-container {
     /* width: 100%; */
     /* color: rgb(102, 102, 245)violet; */
     /* border: 1px solid white; */
@@ -171,12 +198,14 @@ button>a , .file_view>a{
     padding: 4px 3px;
     /* display: none; */
 }
-.output-txt{
+
+.output-txt {
     color: white;
     font-size: 16px;
-    
+
 }
-.output-progess{
+
+.output-progess {
     width: 0%;
     height: 20px;
     background-color: violet;
@@ -184,4 +213,14 @@ button>a , .file_view>a{
     text-align: center;
 }
 
+@media screen and (max-width: 767px) {
 
+    /* Your CSS rules for mobile devices go here */
+    .people-container {
+        margin: 0px;
+        height: unset;
+    }
+    .header-section{
+        width: 100%;
+    }
+}
