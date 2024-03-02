@@ -2,10 +2,8 @@ let downloadContainer = document.querySelector('.downloadContainer');
 const downlaodSection = document.querySelector('.download_section');
 
 
-
-
 const downloadAll = document.querySelector('.pch-downloadAll');
-// var count = 0;
+
 const uploadSection = document.querySelector('.upload_section');
 // var output = document.getElementById('output');
 // var outputText =  document.querySelector('.output-txt');
@@ -57,15 +55,25 @@ const getDownloadFiles = async () => {
       //  </div>
       return `
       <div key="${index}"> 
-       <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
+        <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
         <div class="file_name">${el.fileName}</div>
         <div class="file_size">${manageByte(el.fileSize)}</div>
-        <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
-         </button>
+       <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
       <br>
       `
+      // return `
+      // <div key="${index}"> 
+      //   <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
+      //   <div class="file_name">${el.fileName}</div>
+      //   <div class="file_size">${manageByte(el.fileSize)}</div>
+      //   <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
+      //    </button>
+      // </div>
+      //   <hr/>
+      // <br>
+      // `
     }).join("")
     downlaodSection.innerHTML = mappedData
 
@@ -188,6 +196,7 @@ const buttonDisabledFalse = () => {
 }
 
 const downloadFile = async (str) => {
+  console.log(str)
   downloadArr.push(str);
 
   let dcount = downloadArr.indexOf(str);

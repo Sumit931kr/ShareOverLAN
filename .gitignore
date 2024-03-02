@@ -2,6 +2,7 @@
 .env
 
 /tmp/resource/*
+/tmp/*
 
 /run.exe
 /run.exe *
