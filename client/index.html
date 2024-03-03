@@ -13,7 +13,11 @@
 </head>
 
 <body onload="downloadButton()">
-    <div>
+    <div class="overlay-text" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)" ondragleave="dragOverleave()">
+        <!-- <img src="./drop.png" alt=""> -->
+        Drop file here...
+    </div>
+    <div class="main-container"  ondragover="dragOverHandler(event)">
         <main>
             <div id="nearby_people">
                 <div class="people-container">
@@ -33,8 +37,7 @@
                     <div class="pc-body">
                         <div class="upload_section">
                             <div>Select or Drop file to Upload</div>
-                            <label for="forFile" id="drop_zone" ondrop="dropHandler(event);"
-                                ondragover="dragOverHandler(event);">+</label>
+                            <label for="forFile" id="drop_zone">+</label>
                             <input type="file" id="forFile" enctype="multipart/form-data" onchange="submitValue()"
                                 multiple="multiple">
                             <div id="output-container">

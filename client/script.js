@@ -61,7 +61,7 @@ const getDownloadFiles = async () => {
        <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
-      <br>
+   
       `
       // return `
       // <div key="${index}"> 
@@ -109,7 +109,9 @@ const getZipDownload = () => {
       let dcount = downloadArr.indexOf(el);
       let div = document.createElement('p');
       div.style.padding = "10px";
-      let innerHTML = `<div class="doutput-txt-${dcount}">${el}</div>
+      div.style.position = "relative";
+      let innerHTML = `
+                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${el}</div>
                        <div class="doutput-${dcount} output-progess"></div>`
 
       div.innerHTML = innerHTML;
@@ -127,6 +129,8 @@ const getZipDownload = () => {
           doutput.innerHTML = percentCompleted + "%"
           if (percentCompleted == 100) {
             doutput.innerHTML = "File downloaded Successfully"
+            doutput.parentElement.innerHTML = `<div class="cancelme" onclick="this.parentElement.style.display = 'none';" >X</div>
+            ${doutput.parentElement.innerHTML}`;
           }
         },
       };
@@ -203,7 +207,7 @@ const downloadFile = async (str) => {
 
   let div = document.createElement('div');
   let innerHTML = `<div class="doutput-txt-${dcount}">${str}</div>
-  <div class="doutput-${dcount} output-progess"></div>`
+                   <div class="doutput-${dcount} output-progess"></div>`
 
   div.innerHTML = innerHTML;
   downloadContainer.append(div)
@@ -274,51 +278,11 @@ const downloadFile = async (str) => {
 
 };
 
-// Example usage
-// downloadFile('exampleFileName');
-
-
-// const downloadFile = async(str) =>{
-//   console.log(str);
-//   const options = {
-//     // Defines options for request
-
-//       responseType: 'blob',
-//       // For a file (e.g. image, audio), response should be read to Blob (default to JS object from JSON)
-
-//       onDownloadProgress: function(progressEvent) {
-//       // Function fires when there is download progress
-//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);   
-//       console.log(percentCompleted)
-//           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
-//           // Logs percentage complete to the console
-
-//       }
-
-//     }
-
-//     axios.get('/filedownload?name='+str, options)
-//     // Request with options as second parameter
-//       .then(res => console.log(res.save()))
-//       .catch(err => console.log(err))
-
-
-
-// }
-
-
-const searchNearbyPeople = async () => {
-  console.log("just clicked");
-
-  for (let i = 0; i < nearbyPeople.length; i++) {
-    let str = `<h2> ${nearbyPeople[i].ip} </h2>`
-    nearbyPeopleContainer.innerHTML += str;
-  }
-}
 
 
 var uploadArr = [];
 
+// file upload code 
 const fileUploadCode = async (file) => {
 
   uploadArr.push(file?.name);
@@ -326,7 +290,9 @@ const fileUploadCode = async (file) => {
 
   shouldContinue = false;
   let pDiv = document.createElement('div');
-  let innerhtml = `<div class="output-txt-${count}">${file?.name}</div>
+  pDiv.classList.add('uploadFileGap')
+  let innerhtml = `<div class="output-txt-${count}" style="display:flex; line-break:anywhere; width:90%">${file?.name}</div>               
+                    <div class="outputByte-${count}"></div>
                    <div class="output-${count} output-progess"></div>`
 
   pDiv.innerHTML = innerhtml;
@@ -335,14 +301,20 @@ const fileUploadCode = async (file) => {
 
   var config = {
     onUploadProgress: function (progressEvent) {
+      console.log(progressEvent)
+      console.log(manageByte(progressEvent.loaded))
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
       // console.log(progressEvent)
       var output = document.querySelector('.output-' + count);
+      let outputByte = document.querySelector('.outputByte-' + count);
+      outputByte.innerHTML = `(${manageByte(progressEvent.loaded)}/${manageByte(progressEvent.total)})`
       // console.log()
       output.style.width = `${percentCompleted}%`
-      output.innerHTML = percentCompleted + "%"
+      output.innerHTML = percentCompleted + "%";
       if (percentCompleted == 100) {
         output.innerHTML = "File Uploaded Successfully"
+        output.parentElement.innerHTML = `<div class="cancelme" onclick="this.parentElement.style.display = 'none';" >X</div>
+        ${output.parentElement.innerHTML}`
       }
     }
   };
@@ -363,7 +335,9 @@ const fileUploadCode = async (file) => {
 }
 
 const dropHandler = (ev) => {
+  overlayHidden();
   console.log("File(s) dropped");
+  uploadButton();
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
 
@@ -374,7 +348,7 @@ const dropHandler = (ev) => {
     [...ev.dataTransfer.items].forEach((item, i) => {
       // If dropped items aren't files, reject them
       if (item.kind === "file") {
-        console.log("num")
+        // console.log("num")
         const file = item.getAsFile();
         fileArr.push(file);
         // console.log(file)
@@ -393,12 +367,19 @@ const dropHandler = (ev) => {
 
 const dragOverHandler = (ev) => {
   console.log("File(s) in drop zone");
+  overlayShow();
   // document.getElementById('drop_zone').style.scale = '1.1'
 
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
 }
 
+const dragOverleave = () =>{
+  console.log("leave")
+  overlayHidden();
+}
+
+// Show download page
 const downloadButton = async () => {
   uploadSection.style.display = 'none';
   downlaodSection.style.display = 'flex';
@@ -406,6 +387,7 @@ const downloadButton = async () => {
   callme();
 }
 
+// show upload page 
 const uploadButton = async () => {
   downlaodSection.style.display = 'none';
   uploadSection.style.display = 'flex';
@@ -469,3 +451,72 @@ const callme = () => {
   }, 500);
 }
 callme();
+
+
+// show mainconatiner as overlay screen
+let overlayText = document.querySelector('.overlay-text');
+let mainContainer = document.querySelector('.main-container')
+
+const overlayShow = () => {
+mainContainer.style.display = 'none';
+overlayText.style.display = 'flex';
+
+  // mainContainer.classList.add('overlayShow')
+  // mainContainer.classList.remove('overlayHidden')
+  // mainContainer.classList.add('overlaytext')
+}
+
+const overlayHidden = () => {
+  mainContainer.style.display = 'inline';
+  overlayText.style.display = 'none';
+
+  // overlayText.style.display = "none";
+  // mainContainer.classList.add('overlayHidden')
+  // mainContainer.classList.remove('overlayShow')
+  // mainContainer.classList.remove('overlaytext')
+}
+
+
+
+// Example usage
+// downloadFile('exampleFileName');
+
+
+// const downloadFile = async(str) =>{
+//   console.log(str);
+//   const options = {
+//     // Defines options for request
+
+//       responseType: 'blob',
+//       // For a file (e.g. image, audio), response should be read to Blob (default to JS object from JSON)
+
+//       onDownloadProgress: function(progressEvent) {
+//       // Function fires when there is download progress
+//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);   
+//       console.log(percentCompleted)
+//           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
+//           // Logs percentage complete to the console
+
+//       }
+
+//     }
+
+//     axios.get('/filedownload?name='+str, options)
+//     // Request with options as second parameter
+//       .then(res => console.log(res.save()))
+//       .catch(err => console.log(err))
+
+
+
+// }
+
+
+// const searchNearbyPeople = async () => {
+//   console.log("just clicked");
+
+//   for (let i = 0; i < nearbyPeople.length; i++) {
+//     let str = `<h2> ${nearbyPeople[i].ip} </h2>`
+//     nearbyPeopleContainer.innerHTML += str;
+//   }
+// }
+

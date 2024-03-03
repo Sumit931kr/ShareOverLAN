@@ -9,6 +9,36 @@ body {
     color: white;
 }
 
+.main-container {
+    height: 100vh;
+    position: relative;
+    transition: all 0.5s ease;
+}
+.overlay-text{
+    display: none;
+    font-size: 40px;
+    position: absolute;
+    width: 98vw;
+    height: 98vh;
+    color: white;
+    z-index: 25;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(18, 37, 77, 0.885);
+}
+
+.overlayShow {
+    opacity: 0.5;
+    /* pointer-events: none; */
+}
+
+.overlayHidden {
+    opacity: 1;
+    /* pointer-events: unset; */
+}
+
 header>button {
     padding: 8px 6px;
     cursor: pointer;
@@ -36,9 +66,10 @@ header>button:hover {
     overflow: auto;
     position: relative;
 }
-.header-section{
+
+.header-section {
     position: fixed;
-    background-color:rgb(44 61 97);
+    background-color: rgb(44 61 97);
     width: 100%;
     top: 0%;
     border-bottom: 1px solid white;
@@ -77,7 +108,7 @@ header>button:hover {
     float: right;
 }
 
-.downloadContainer{
+.downloadContainer {
     padding: 10px;
 }
 
@@ -146,7 +177,8 @@ input[type="file"] {
     justify-content: space-between;
     padding: 0 10px;
     gap: 10px;
-    align-items: flex-start;
+    align-items: center;
+    margin: 7px 0;
     /* width: 100%; */
 }
 
@@ -215,6 +247,22 @@ button>a,
     text-align: center;
 }
 
+.cancelme {
+    position: absolute;
+    top: 0%;
+    right: 2%;
+    cursor: pointer;
+}
+
+.uploadFileGap{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 0;
+    position: relative;
+}
+
+
 @media screen and (max-width: 767px) {
 
     /* Your CSS rules for mobile devices go here */
@@ -222,7 +270,8 @@ button>a,
         margin: 0px;
         height: unset;
     }
-    .header-section{
+
+    .header-section {
         width: 100%;
     }
 }

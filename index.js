@@ -13,6 +13,12 @@ const path = require("path");
 const fs = require("fs");
 const app = express();
 
+// secret Key 
+const secretKey = process.env.SECRETKEY || 'your-secret-key';
+
+// const crypto = require('crypto');
+
+
 
 app.use('/download', express.static('./tmp/resource'))
 app.use(cors());
@@ -26,6 +32,20 @@ const upload = multer({
 });
 
 
+
+// // Function to encode the filename
+// function encodeFilename(filename) {
+//   return encodeURIComponent(filename).replace(/%20/g, '+');
+// }
+
+// // Function to decode the filename
+// function decodeFilename(filename) {
+//   return decodeURIComponent(filename.replace(/\+/g, ' '));
+// }
+
+
+// Map to store original filename to encoded filename mapping
+// const filenameMap = new Map();
 
 // Sending the index.html file 
 app.get('/', (req, res) => {
@@ -48,17 +68,27 @@ app.get('/getfiles', (req, res) => {
 
     // return files
     files.forEach(file => {
+      // console.log(file);
+      // console.log("empty")
       let obj = {}
       let stats = fs.statSync("./tmp/resource/" + file)
+      // console.log(stats)
+
+    
+  //  filenameMap.set(file, encodeFilename(file))
+
 
       let fileSizeInBytes = stats.size;
       var fileModifiedTime = new Date(stats.mtime).getTime()
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;
       obj['fileModifiedTime'] = fileModifiedTime;
+     
 
       resObj.push(obj);
     });
+
+    // console.log(filenameMap)
 
     res.send(JSON.stringify(resObj))
     // console.log(resObj)
@@ -107,11 +137,19 @@ app.post("/upload",
   }
 );
 
+
 // Sending the file to download 
 app.get('/filedownload', (req, res) => {
 
-  const { name } = req.query;
-  const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
+  let { name } = req.query;
+  // console.log(name)
+
+ // Decode the filename
+//  const decodedName = decodeFilename(name);
+
+  // name = filenameMap.get(decodedName)
+  const targetPath = path.join(__dirname, `./tmp/resource/` + name);
+  // console.log(targetPath)
 
   if (!fs.existsSync(targetPath)) {
     return res.status(404).send('File not found');
@@ -135,6 +173,8 @@ app.get('/filedownload', (req, res) => {
     res.send('Something Went wrong')
   }
 })
+
+
 
 // View file 
 app.get('/viewfile', (req, res) => {
