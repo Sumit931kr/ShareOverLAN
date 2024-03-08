@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./lib/axios.min.js"> </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="getDownloadFiles()">
+    <div class="main-container">
+        <div class="download_section" style="display: flex; padding-top: 10px;">
+            <div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    const downlaodSection = document.querySelector('.download_section');
+
+
+    var sizeCounter = 0;
+    let sizeMeter = {
+        0: 'KB',
+        1: 'MB',
+        2: 'GB',
+        3: 'TB'
+    }
+
+    const manageByte = (num) => {
+        let res = num / 1024;
+        if (res > 1000) {
+            sizeCounter++;
+            return manageByte(res)
+        }
+        else {
+            let value = sizeCounter;
+            sizeCounter = 0;
+            return res.toFixed(2) + sizeMeter[value]
+        }
+    }
+
+    const browserSupportedExtensions = [
+        'html',
+        'htm',
+        'css',
+        'js',
+        'json',
+        'txt',
+        'md',
+        'xml',
+        'svg',
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+        'bmp',
+        'webp',
+        'ico',
+        'pdf',
+        'mp3',
+        'mkv',
+        'properties',
+        'ogg',
+        'wav',
+        // 'mp4',
+        'webm',
+        'ogv',
+        'mov',
+        'avi'
+    ];
+
+    const getDownloadFiles = async () => {
+        const response = await axios.get('/getFiles');
+        let data = response.data;
+
+        if (data.length > 0) {
+            let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
+                let str = el.fileName
+                return `
+                ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
+                `
+                <div key="${index}"> 
+                    <div> ${index+1} </div>
+                    <div class="file_name">${el.fileName}</div>
+                    <div class="file_size">${manageByte(el.fileSize)}</div>
+                     <a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>
+                </div>
+                <hr/>
+                `: ``}
+                `
+                }).join("")
+            downlaodSection.innerHTML = mappedData
+        }
+    }
+</script>
+
+</html>

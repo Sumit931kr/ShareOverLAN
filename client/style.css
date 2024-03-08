@@ -204,7 +204,7 @@ align-items: center;
 }
  */
 
-.file_download {
+.file_download , .view{
     /* width: 20%; */
     color: white;
     background-color: rgba(41, 41, 187, 0.538);
@@ -214,6 +214,10 @@ align-items: center;
     margin-bottom: 3px;
     color: white;
     text-decoration: none;
+}
+
+.view{
+    background-color: #04AA6D;
 }
 
 button>a,

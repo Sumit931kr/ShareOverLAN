@@ -58,6 +58,10 @@ app.get('/', (req, res) => {
 
 })
 
+app.get('/media', (req, res) =>{
+  res.sendFile(path.join(__dirname, 'client', 'media.html'))
+})
+
 // Send Array of Downloadable file
 app.get('/getfiles', (req, res) => {
 
@@ -157,17 +161,32 @@ app.get('/filedownload', (req, res) => {
 
 
   try {
-    const stream = fs.createReadStream(targetPath);
+    // const stream = fs.createReadStream(targetPath);
     const stats = fs.statSync(targetPath);
     const fileSize = stats.size;
 
-    stream.on('open', () => {
-      const mimeType = mime.getType(targetPath);
-      res.set('Content-Type', mimeType || 'application/octet-stream');
-      res.setHeader('Content-disposition', `attachment; filename=${targetPath.split('\\').pop()}`);
-      res.setHeader('Content-Length', fileSize);
-      stream.pipe(res);
-    })
+    // stream.on('open', () => {
+    //   const mimeType = mime.getType(targetPath);
+    //   res.set('Content-Type', mimeType || 'application/octet-stream');
+    //   res.setHeader('Content-disposition', `attachment; filename=${targetPath.split('\\').pop()}`);
+    //   res.setHeader('Content-Length', fileSize);
+    //   stream.pipe(res);
+    // })
+
+   
+    res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
+    res.setHeader('Content-Length', fileSize);
+
+    const fileStream = fs.createReadStream(targetPath);
+
+    // Pipe the file stream to the response object
+    fileStream.pipe(res);
+
+    // Optional: Handle errors
+    fileStream.on('error', (err) => {
+        console.error('Error streaming file:', err);
+        res.status(500).send('Internal Server Error');
+    });
   } catch (error) {
     console.log("error " + error)
     res.send('Something Went wrong')
@@ -176,13 +195,24 @@ app.get('/filedownload', (req, res) => {
 
 
 
+
 // View file 
 app.get('/viewfile', (req, res) => {
   const { name } = req.query;
   const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
   try {
-    console.log(targetPath)
-    res.sendFile(targetPath)
+ 
+    const fileStream = fs.createReadStream(targetPath);
+
+    // Pipe the file stream to the response object
+    fileStream.pipe(res);
+
+    // Optional: Handle errors
+    fileStream.on('error', (err) => {
+        console.error('Error streaming file:', err);
+        res.status(500).send('Internal Server Error');
+    });
+  
   } catch (error) {
     console.log("error " + error)
     res.send('Something Went wrong')

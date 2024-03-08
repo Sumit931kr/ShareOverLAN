@@ -10,6 +10,7 @@ const uploadSection = document.querySelector('.upload_section');
 let nearbyPeopleContainer = document.getElementById('nearby_people')
 const outPutContainer = document.getElementById('output-container');
 
+
 // const https = require('https');
 // const agent = new https.Agent({  
 // rejectUnauthorized: false
@@ -44,6 +45,8 @@ const manageByte = (num) => {
 }
 
 
+
+
 const getDownloadFiles = async () => {
   const response = await axios.get('/getFiles');
   let data = response.data;
@@ -53,6 +56,7 @@ const getDownloadFiles = async () => {
       // <div class="file_view">
       // <a href="/viewfile?name=${el.file}" target="_blank"> View </a>
       //  </div>
+      let str = el.fileName
       return `
       <div key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
@@ -61,8 +65,11 @@ const getDownloadFiles = async () => {
        <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
-   
       `
+    //   ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
+    //   `<a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>` : `<div></div>`
+    // } 
+
       // return `
       // <div key="${index}"> 
       //   <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
@@ -283,16 +290,17 @@ const downloadFile = async (str) => {
 var uploadArr = [];
 
 // file upload code 
-const fileUploadCode = async (file) => {
+const fileUploadCode = async ({file, i}) => {
 
   uploadArr.push(file?.name);
-  let count = uploadArr.indexOf(file?.name);
+  // let count = uploadArr.indexOf(file?.name);
+  let count = i;
 
   shouldContinue = false;
   let pDiv = document.createElement('div');
   pDiv.classList.add('uploadFileGap')
   let innerhtml = `<div class="output-txt-${count}" style="display:flex; line-break:anywhere; width:90%">${file?.name}</div>               
-                    <div class="outputByte-${count}"></div>
+                   <div class="outputByte-${count}"></div>
                    <div class="output-${count} output-progess"></div>`
 
   pDiv.innerHTML = innerhtml;
@@ -319,6 +327,7 @@ const fileUploadCode = async (file) => {
     }
   };
 
+console.log(file)
 
   var formdata = new FormData();
   formdata.append('file', file)
@@ -374,7 +383,7 @@ const dragOverHandler = (ev) => {
   ev.preventDefault();
 }
 
-const dragOverleave = () =>{
+const dragOverleave = () => {
   console.log("leave")
   overlayHidden();
 }
@@ -407,17 +416,12 @@ const submitValue = (ev) => {
   curFiles = inputFile.files;
 
   fileArrForCall(curFiles);
-  // document.getElementById('drop_zone').style.pointerEvents = "none";
-  // for (const file of curFiles) {
-  //   if (shouldContinue) {
-  //     fileUploadCode(file)
-  //   }
-  // }
+
 }
 
 const fileArrForCall = (files) => {
   if (files[myNum]) {
-    fileUploadCode(files[myNum])
+    fileUploadCode({file : files[myNum], i :uploadArr.length})
   }
   else {
     myNum = 0;
@@ -458,8 +462,8 @@ let overlayText = document.querySelector('.overlay-text');
 let mainContainer = document.querySelector('.main-container')
 
 const overlayShow = () => {
-mainContainer.style.display = 'none';
-overlayText.style.display = 'flex';
+  mainContainer.style.display = 'none';
+  overlayText.style.display = 'flex';
 
   // mainContainer.classList.add('overlayShow')
   // mainContainer.classList.remove('overlayHidden')
@@ -476,7 +480,19 @@ const overlayHidden = () => {
   // mainContainer.classList.remove('overlaytext')
 }
 
+window.addEventListener('paste',(e)=>{
+  let files = e.clipboardData.files
 
+  if(!files[0]) return 
+
+  uploadButton()
+
+  // console.log(files[0])
+
+  fileUploadCode({file :files[0], i : uploadArr.length})
+
+
+})
 
 // Example usage
 // downloadFile('exampleFileName');
@@ -492,7 +508,7 @@ const overlayHidden = () => {
 
 //       onDownloadProgress: function(progressEvent) {
 //       // Function fires when there is download progress
-//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);   
+//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 //       console.log(percentCompleted)
 //           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
 //           // Logs percentage complete to the console
