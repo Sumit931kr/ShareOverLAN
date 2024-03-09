@@ -13,13 +13,6 @@ const path = require("path");
 const fs = require("fs");
 const app = express();
 
-// secret Key 
-const secretKey = process.env.SECRETKEY || 'your-secret-key';
-
-// const crypto = require('crypto');
-
-
-
 app.use('/download', express.static('./tmp/resource'))
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client')));
@@ -58,7 +51,7 @@ app.get('/', (req, res) => {
 
 })
 
-app.get('/media', (req, res) =>{
+app.get('/media', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'media.html'))
 })
 
@@ -68,34 +61,22 @@ app.get('/getfiles', (req, res) => {
   let resObj = [];
 
   let filesArr = fs.readdir('./tmp/resource', (err, files) => {
-    // console.log(typeof (files[2]))
 
-    // return files
     files.forEach(file => {
-      // console.log(file);
-      // console.log("empty")
       let obj = {}
       let stats = fs.statSync("./tmp/resource/" + file)
-      // console.log(stats)
-
-    
-  //  filenameMap.set(file, encodeFilename(file))
-
-
+      //  filenameMap.set(file, encodeFilename(file))
       let fileSizeInBytes = stats.size;
       var fileModifiedTime = new Date(stats.mtime).getTime()
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;
       obj['fileModifiedTime'] = fileModifiedTime;
-     
+      obj['realname'] = decodeURIComponent(atob(file))
 
       resObj.push(obj);
     });
 
-    // console.log(filenameMap)
-
     res.send(JSON.stringify(resObj))
-    // console.log(resObj)
   });
   // console.log(filesArr)
   // 
@@ -109,16 +90,34 @@ const handleError = (err, res) => {
     .end("Oops! Something went wrong!");
 };
 
+function saveStringWithUniqueName(string, array) {
+  let newName = string;
+  let counter = 1;
+
+  // Check if the string already exists in the array
+  while (array.includes(newName)) {
+      // Append a number in parentheses to the string
+      const extensionIndex = string.lastIndexOf('.');
+      const baseName = string.substring(0, extensionIndex);
+      const extension = string.substring(extensionIndex);
+      newName = `${baseName}(${counter})${extension}`;
+      counter++;
+  }
+
+  // Save the unique name to the array
+  array.push(newName);
+}
+
 // Code for Uploading the File
 app.post("/upload",
-  upload.single("file" /* name attribute of <file> element in your form */),
+upload.single("file" /* name attribute of <file> element in your form */),
   (req, res) => {
-    console.log(req.file)
+ 
     const tempPath = req.file.path;
-    // const targetPath = path.join(__dirname, "./uploads/image.png");
-    const targetPath = path.join(__dirname, `./tmp/resource/${req.file.originalname}`);
 
-    // if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+    let fakename = btoa(encodeURIComponent(req.file.originalname));
+    const targetPath = path.join(__dirname, `./tmp/resource/${fakename}`);
+
     if (true) {
       fs.rename(tempPath, targetPath, err => {
         if (err) return handleError(err, res);
@@ -141,24 +140,15 @@ app.post("/upload",
   }
 );
 
-
 // Sending the file to download 
 app.get('/filedownload', (req, res) => {
 
   let { name } = req.query;
-  // console.log(name)
-
- // Decode the filename
-//  const decodedName = decodeFilename(name);
-
-  // name = filenameMap.get(decodedName)
   const targetPath = path.join(__dirname, `./tmp/resource/` + name);
-  // console.log(targetPath)
 
   if (!fs.existsSync(targetPath)) {
     return res.status(404).send('File not found');
   }
-
 
   try {
     // const stream = fs.createReadStream(targetPath);
@@ -173,8 +163,9 @@ app.get('/filedownload', (req, res) => {
     //   stream.pipe(res);
     // })
 
-   
-    res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
+    let realname = atob(decodeURIComponent(name));
+
+    res.setHeader('Content-Disposition', `attachment; filename="${realname}"`);
     res.setHeader('Content-Length', fileSize);
 
     const fileStream = fs.createReadStream(targetPath);
@@ -184,8 +175,8 @@ app.get('/filedownload', (req, res) => {
 
     // Optional: Handle errors
     fileStream.on('error', (err) => {
-        console.error('Error streaming file:', err);
-        res.status(500).send('Internal Server Error');
+      console.error('Error streaming file:', err);
+      res.status(500).send('Internal Server Error');
     });
   } catch (error) {
     console.log("error " + error)
@@ -201,7 +192,7 @@ app.get('/viewfile', (req, res) => {
   const { name } = req.query;
   const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
   try {
- 
+
     const fileStream = fs.createReadStream(targetPath);
 
     // Pipe the file stream to the response object
@@ -209,10 +200,10 @@ app.get('/viewfile', (req, res) => {
 
     // Optional: Handle errors
     fileStream.on('error', (err) => {
-        console.error('Error streaming file:', err);
-        res.status(500).send('Internal Server Error');
+      console.error('Error streaming file:', err);
+      res.status(500).send('Internal Server Error');
     });
-  
+
   } catch (error) {
     console.log("error " + error)
     res.send('Something Went wrong')

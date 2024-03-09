@@ -44,31 +44,31 @@ const manageByte = (num) => {
   }
 }
 
-
-
+var DownloadableFileData = [];
 
 const getDownloadFiles = async () => {
   const response = await axios.get('/getFiles');
   let data = response.data;
+  DownloadableFileData = [];
+  DownloadableFileData = [...data]
 
   if (data.length > 0) {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
-      // <div class="file_view">
-      // <a href="/viewfile?name=${el.file}" target="_blank"> View </a>
-      //  </div>
-      let str = el.fileName
+
+      // console.log(el.fileName)
+     
       return `
       <div key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
-        <div class="file_name">${el.fileName}</div>
+        <div class="file_name">${el.realname}</div>
         <div class="file_size">${manageByte(el.fileSize)}</div>
        <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
       `
-    //   ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
-    //   `<a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>` : `<div></div>`
-    // } 
+      //   ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
+      //   `<a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>` : `<div></div>`
+      // } 
 
       // return `
       // <div key="${index}"> 
@@ -118,7 +118,7 @@ const getZipDownload = () => {
       div.style.padding = "10px";
       div.style.position = "relative";
       let innerHTML = `
-                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${el}</div>
+                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${decodeURIComponent(atob(el))}</div>
                        <div class="doutput-${dcount} output-progess"></div>`
 
       div.innerHTML = innerHTML;
@@ -149,9 +149,9 @@ const getZipDownload = () => {
       var filename = el
       const response = await axiosInstance.get('/filedownload?name=' + filename, options);
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      var img = zip.folder("folder");
+      // var img = zip.folder("folder");
       // loading a file and add it in a zip file
-      img.file(filename, blob, { binary: true });
+      zip.file(decodeURIComponent(atob(filename)), blob, { binary: true });
       count++
       if (count == downloadAbleFile.length) {
         zip.generateAsync({ type: 'blob' }).then(function (content) {
@@ -207,7 +207,7 @@ const buttonDisabledFalse = () => {
 }
 
 const downloadFile = async (str) => {
-  console.log(str)
+  // console.log(str)
   downloadArr.push(str);
 
   let dcount = downloadArr.indexOf(str);
@@ -247,11 +247,11 @@ const downloadFile = async (str) => {
     // const response = await axios.get('/filedownload?name=' + str, options);
     const response = await axiosInstance.get('/filedownload?name=' + str, options);
 
-    console.log(response.data)
+    // console.log(response.data)
     // Create a blob from the response data
     const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
-    console.log(blob)
+    // console.log(blob)
     // Create a link element
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
@@ -268,7 +268,7 @@ const downloadFile = async (str) => {
     // Remove the link from the document
     document.body.removeChild(link);
 
-    console.log('File download initiated successfully!');
+    // console.log('File download initiated successfully!');
   } catch (error) {
     console.error('Error downloading file:', error.message);
     if (axios.isAxiosError(error)) {
@@ -285,12 +285,41 @@ const downloadFile = async (str) => {
 
 };
 
-
-
 var uploadArr = [];
 
+
+// function saveStringWithUniqueName(string, array) {
+//   let newName = string;
+//   let counter = 1;
+
+//   // Check if the string already exists in the array
+//   while (DownloadableFileData.find(el => el.realname == newName)) {
+
+//       // Append a number in parentheses to the string
+//       const extensionIndex = string.lastIndexOf('.');
+//       const baseName = string.substring(0, extensionIndex);
+      
+//       const extension = string.substring(extensionIndex);
+//       newName = `${baseName}(${counter})${extension}`;
+//       counter++;
+//   }
+
+//   // Save the unique name to the array
+//   return newName
+// }
+
+
+// function
+
+
 // file upload code 
-const fileUploadCode = async ({file, i}) => {
+const fileUploadCode = async ({ file, i }) => {
+
+  // let findfile = DownloadableFileData.find( el => el.realname == file?.name)
+
+  // if(findfile){
+
+  // }
 
   uploadArr.push(file?.name);
   // let count = uploadArr.indexOf(file?.name);
@@ -309,8 +338,8 @@ const fileUploadCode = async ({file, i}) => {
 
   var config = {
     onUploadProgress: function (progressEvent) {
-      console.log(progressEvent)
-      console.log(manageByte(progressEvent.loaded))
+      // console.log(progressEvent)
+      // console.log(manageByte(progressEvent.loaded))
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
       // console.log(progressEvent)
       var output = document.querySelector('.output-' + count);
@@ -327,7 +356,7 @@ const fileUploadCode = async ({file, i}) => {
     }
   };
 
-console.log(file)
+  // console.log(file)
 
   var formdata = new FormData();
   formdata.append('file', file)
@@ -375,7 +404,7 @@ const dropHandler = (ev) => {
 }
 
 const dragOverHandler = (ev) => {
-  console.log("File(s) in drop zone");
+  // console.log("File(s) in drop zone");
   overlayShow();
   // document.getElementById('drop_zone').style.scale = '1.1'
 
@@ -384,7 +413,7 @@ const dragOverHandler = (ev) => {
 }
 
 const dragOverleave = () => {
-  console.log("leave")
+  // console.log("leave")
   overlayHidden();
 }
 
@@ -421,7 +450,7 @@ const submitValue = (ev) => {
 
 const fileArrForCall = (files) => {
   if (files[myNum]) {
-    fileUploadCode({file : files[myNum], i :uploadArr.length})
+    fileUploadCode({ file: files[myNum], i: uploadArr.length })
   }
   else {
     myNum = 0;
@@ -480,16 +509,16 @@ const overlayHidden = () => {
   // mainContainer.classList.remove('overlaytext')
 }
 
-window.addEventListener('paste',(e)=>{
+window.addEventListener('paste', (e) => {
   let files = e.clipboardData.files
 
-  if(!files[0]) return 
+  if (!files[0]) return
 
   uploadButton()
 
   // console.log(files[0])
 
-  fileUploadCode({file :files[0], i : uploadArr.length})
+  fileUploadCode({ file: files[0], i: uploadArr.length })
 
 
 })

@@ -26,13 +26,13 @@ node index.js/ nodemon index.js
 
 the problem have faced if any me contact (Old Yoda)
 
-## Version History
+<!-- ## Version History -->
 
-Release feature in the near future(I hope so ).
+<!-- Release feature in the near future(I hope so ). -->
 
 ## License
 
-This project is licensed under the nothing.
+This project is licensed under Beerware License..
 
 
 

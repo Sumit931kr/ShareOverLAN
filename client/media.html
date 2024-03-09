@@ -19,8 +19,10 @@
 </body>
 <script>
 
-    const downlaodSection = document.querySelector('.download_section');
+const browserSupportedExtensions = ['html','htm','css','js','json','txt','md','xml','svg','jpg','jpeg','png','gif','bmp','webp','ico','pdf','mp3','mkv','properties','ogg','wav',// 'mp4','webm','ogv','mov','avi'
+    ];
 
+    const downlaodSection = document.querySelector('.download_section');
 
     var sizeCounter = 0;
     let sizeMeter = {
@@ -43,49 +45,23 @@
         }
     }
 
-    const browserSupportedExtensions = [
-        'html',
-        'htm',
-        'css',
-        'js',
-        'json',
-        'txt',
-        'md',
-        'xml',
-        'svg',
-        'jpg',
-        'jpeg',
-        'png',
-        'gif',
-        'bmp',
-        'webp',
-        'ico',
-        'pdf',
-        'mp3',
-        'mkv',
-        'properties',
-        'ogg',
-        'wav',
-        // 'mp4',
-        'webm',
-        'ogv',
-        'mov',
-        'avi'
-    ];
 
     const getDownloadFiles = async () => {
         const response = await axios.get('/getFiles');
         let data = response.data;
+        console.log(data)
 
         if (data.length > 0) {
             let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
-                let str = el.fileName
+                let str = decodeURIComponent(atob(el.fileName))
+                console.log(browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]))
+
                 return `
                 ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
                 `
                 <div key="${index}"> 
                     <div> ${index+1} </div>
-                    <div class="file_name">${el.fileName}</div>
+                    <div class="file_name">${str}</div>
                     <div class="file_size">${manageByte(el.fileSize)}</div>
                      <a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>
                 </div>
