@@ -32,6 +32,7 @@ let sizeMeter = {
 }
 
 const manageByte = (num) => {
+  if (!num) return 0
   let res = num / 1024;
   if (res > 1000) {
     sizeCounter++;
@@ -56,7 +57,7 @@ const getDownloadFiles = async () => {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
 
       // console.log(el.fileName)
-     
+
       return `
       <div key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
@@ -287,39 +288,8 @@ const downloadFile = async (str) => {
 
 var uploadArr = [];
 
-
-// function saveStringWithUniqueName(string, array) {
-//   let newName = string;
-//   let counter = 1;
-
-//   // Check if the string already exists in the array
-//   while (DownloadableFileData.find(el => el.realname == newName)) {
-
-//       // Append a number in parentheses to the string
-//       const extensionIndex = string.lastIndexOf('.');
-//       const baseName = string.substring(0, extensionIndex);
-      
-//       const extension = string.substring(extensionIndex);
-//       newName = `${baseName}(${counter})${extension}`;
-//       counter++;
-//   }
-
-//   // Save the unique name to the array
-//   return newName
-// }
-
-
-// function
-
-
 // file upload code 
 const fileUploadCode = async ({ file, i }) => {
-
-  // let findfile = DownloadableFileData.find( el => el.realname == file?.name)
-
-  // if(findfile){
-
-  // }
 
   uploadArr.push(file?.name);
   // let count = uploadArr.indexOf(file?.name);
@@ -341,22 +311,21 @@ const fileUploadCode = async ({ file, i }) => {
       // console.log(progressEvent)
       // console.log(manageByte(progressEvent.loaded))
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-      // console.log(progressEvent)
+      // console.log(manageByte(progressEvent.rate) +"/s")
       var output = document.querySelector('.output-' + count);
       let outputByte = document.querySelector('.outputByte-' + count);
-      outputByte.innerHTML = `(${manageByte(progressEvent.loaded)}/${manageByte(progressEvent.total)})`
+      outputByte.innerHTML = `(${manageByte(progressEvent.loaded)}/${manageByte(progressEvent.total)}) ${manageByte(progressEvent.rate)}/s`
       // console.log()
       output.style.width = `${percentCompleted}%`
       output.innerHTML = percentCompleted + "%";
       if (percentCompleted == 100) {
+        outputByte.innerHTML = `size : ${manageByte(progressEvent.total)}`
         output.innerHTML = "File Uploaded Successfully"
         output.parentElement.innerHTML = `<div class="cancelme" onclick="this.parentElement.style.display = 'none';" >X</div>
         ${output.parentElement.innerHTML}`
       }
     }
   };
-
-  // console.log(file)
 
   var formdata = new FormData();
   formdata.append('file', file)
@@ -509,18 +478,26 @@ const overlayHidden = () => {
   // mainContainer.classList.remove('overlaytext')
 }
 
-window.addEventListener('paste', (e) => {
-  let files = e.clipboardData.files
+document.querySelector('.main-container').addEventListener('paste', (e) => {
+  // console.log("op")
+  let files = e.clipboardData.files;
+  console.log(files)
 
-  if (!files[0]) return
+  if (!files[0]) return;
+  if (files[0].name == "image.png") {
 
-  uploadButton()
+    uploadButton();
 
-  // console.log(files[0])
+    let nameArr = files[0].name.split('.');
+    let newName = nameArr[0] + Date.now() + "." + nameArr[1];
+    let newFile = {0 :new File([files[0]], newName, { type: files[0].type })}
+    console.log(newFile)
+    // fileUploadCode({ file: newFile, i: uploadArr.length });
 
-  fileUploadCode({ file: files[0], i: uploadArr.length })
+    curFiles = newFile;
+    fileArrForCall(curFiles);
 
-
+  }
 })
 
 // Example usage

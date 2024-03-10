@@ -90,24 +90,6 @@ const handleError = (err, res) => {
     .end("Oops! Something went wrong!");
 };
 
-function saveStringWithUniqueName(string, array) {
-  let newName = string;
-  let counter = 1;
-
-  // Check if the string already exists in the array
-  while (array.includes(newName)) {
-      // Append a number in parentheses to the string
-      const extensionIndex = string.lastIndexOf('.');
-      const baseName = string.substring(0, extensionIndex);
-      const extension = string.substring(extensionIndex);
-      newName = `${baseName}(${counter})${extension}`;
-      counter++;
-  }
-
-  // Save the unique name to the array
-  array.push(newName);
-}
-
 // Code for Uploading the File
 app.post("/upload",
 upload.single("file" /* name attribute of <file> element in your form */),
@@ -192,17 +174,49 @@ app.get('/viewfile', (req, res) => {
   const { name } = req.query;
   const targetPath = path.join(__dirname, `./tmp/resource/${name}`);
   try {
+    console.log(targetPath)
+    const videoPath = targetPath; // Update with the path to your video file
+    const stat = fs.statSync(videoPath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+    console.log(range)
 
-    const fileStream = fs.createReadStream(targetPath);
+    if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = (end - start) + 1;
+        const file = fs.createReadStream(videoPath, { start, end });
+        const head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'video/mp4',
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      }
+      else {
+        const head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'video/mp4',
+        };
+        console.log("done")
+        res.writeHead(200, head);
+        fs.createReadStream(videoPath).pipe(res);
+    }
 
-    // Pipe the file stream to the response object
-    fileStream.pipe(res);
 
-    // Optional: Handle errors
-    fileStream.on('error', (err) => {
-      console.error('Error streaming file:', err);
-      res.status(500).send('Internal Server Error');
-    });
+    // const fileStream = fs.createReadStream(targetPath);
+
+    // // Pipe the file stream to the response object
+    // fileStream.pipe(res);
+
+    // // Optional: Handle errors
+    // fileStream.on('error', (err) => {
+    //   console.error('Error streaming file:', err);
+    //   res.status(500).send('Internal Server Error');
+    // });
 
   } catch (error) {
     console.log("error " + error)
