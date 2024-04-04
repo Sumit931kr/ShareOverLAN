@@ -31,6 +31,44 @@ let sizeMeter = {
   3: 'TB'
 }
 
+
+// format the second
+function formatSeconds(seconds) {
+  if (isNaN(seconds) || seconds < 0) {
+      return "";
+  }
+
+  const days = Math.floor(seconds / (3600 * 24));
+  seconds %= 3600 * 24;
+
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  let result = '';
+
+  if (days > 0) {
+      result += days + ' day ';
+  }
+
+  if (hours > 0) {
+      result += hours + ' hour ';
+  }
+
+  if (minutes > 0) {
+      result += minutes + ' min ';
+  }
+
+  if (remainingSeconds > 0) {
+      result += Math.floor(remainingSeconds) + ' sec';
+  }
+
+  return result.trim();
+}
+
+// format the byte
 const manageByte = (num) => {
   if (!num) return 0
   let res = num / 1024;
@@ -308,13 +346,16 @@ const fileUploadCode = async ({ file, i }) => {
 
   var config = {
     onUploadProgress: function (progressEvent) {
+      // let speed = ( progressEvent.total - progressEvent.loaded )/ progressEvent.rate
+      // console.log(speed);
+      // console.log(formatSeconds(speed))
       // console.log(progressEvent)
       // console.log(manageByte(progressEvent.loaded))
       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
       // console.log(manageByte(progressEvent.rate) +"/s")
       var output = document.querySelector('.output-' + count);
       let outputByte = document.querySelector('.outputByte-' + count);
-      outputByte.innerHTML = `(${manageByte(progressEvent.loaded)}/${manageByte(progressEvent.total)}) ${manageByte(progressEvent.rate)}/s`
+      outputByte.innerHTML = `(${manageByte(progressEvent.loaded)}/${manageByte(progressEvent.total)}) ${manageByte(progressEvent.rate)}/s </br> Estimate time : ${formatSeconds(progressEvent.estimated)}`
       // console.log()
       output.style.width = `${percentCompleted}%`
       output.innerHTML = percentCompleted + "%";
