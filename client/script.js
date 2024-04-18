@@ -131,7 +131,7 @@ const getDownloadFiles = async () => {
 var downloadArr = [];
 
 const getZipDownload = () => {
-  let checkArr = document.querySelectorAll('input[type=checkbox]:checked');
+  let checkArr = document.querySelectorAll('.inputcheckboxdiv>input[type=checkbox]:checked');
   let downloadAbleFile = [];
 
   checkArr.forEach(el => {
@@ -151,13 +151,15 @@ const getZipDownload = () => {
 
     downloadAbleFile.forEach(async function (el, i) {
 
+      let nameToShown = el.includes("=") ? decodeURIComponent(atob(el)) :  el
+
       downloadArr.push(el);
       let dcount = downloadArr.indexOf(el);
       let div = document.createElement('p');
       div.style.padding = "10px";
       div.style.position = "relative";
       let innerHTML = `
-                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${decodeURIComponent(atob(el))}</div>
+                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${nameToShown}</div>
                        <div class="doutput-${dcount} output-progess"></div>`
 
       div.innerHTML = innerHTML;
@@ -190,7 +192,8 @@ const getZipDownload = () => {
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
       // var img = zip.folder("folder");
       // loading a file and add it in a zip file
-      zip.file(decodeURIComponent(atob(filename)), blob, { binary: true });
+      zip.file(nameToShown, blob, { binary: true });
+
       count++
       if (count == downloadAbleFile.length) {
         zip.generateAsync({ type: 'blob' }).then(function (content) {
@@ -219,7 +222,7 @@ const getZipDownload = () => {
 }
 
 const clearAllcheckbox = () => {
-  let checkArr = document.querySelectorAll('input[type=checkbox]');
+  let checkArr = document.querySelectorAll('.inputcheckboxdiv>input[type=checkbox]');
   checkArr.forEach((el) => {
     el.checked = false;
   })
@@ -478,7 +481,7 @@ const callme = () => {
     inputcheckboxArr.forEach((input) => {
       input.addEventListener('click', (el) => {
         // console.log(el)
-        const inputchecked = document.querySelectorAll('input[type="checkbox"]:checked');
+        const inputchecked = document.querySelectorAll('.inputcheckboxdiv>input[type="checkbox"]:checked');
         // console.log(inputchecked.length)
         if (inputchecked.length > 0) {
           buttonDisabledTrue();

@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 
 const mime = require('mime');
 
-
 dotenv.config();
 const os = require('os');
 
@@ -67,11 +66,15 @@ app.get('/getfiles', (req, res) => {
       let stats = fs.statSync("./tmp/resource/" + file)
       //  filenameMap.set(file, encodeFilename(file))
       let fileSizeInBytes = stats.size;
-      var fileModifiedTime = new Date(stats.mtime).getTime()
+      var fileModifiedTime = new Date(stats.mtime).getTime();
+      // console.log(file)
+      
+      let realname = file.includes("=")? decodeURIComponent(atob(file)):file
+
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;
       obj['fileModifiedTime'] = fileModifiedTime;
-      obj['realname'] = decodeURIComponent(atob(file))
+      obj['realname'] = realname
 
       resObj.push(obj);
     });
@@ -145,7 +148,7 @@ app.get('/filedownload', (req, res) => {
     //   stream.pipe(res);
     // })
 
-    let realname = atob(decodeURIComponent(name));
+    let realname = name.includes("=") ? atob(decodeURIComponent(name)): name;
 
     res.setHeader('Content-Disposition', `attachment; filename="${realname}"`);
     res.setHeader('Content-Length', fileSize);
