@@ -59,7 +59,7 @@ app.get('/getfiles', (req, res) => {
 
   let resObj = [];
 
-  let filesArr = fs.readdir('./tmp/resource', (err, files) => {
+ fs.readdir('./tmp/resource', (err, files) => {
 
     files.forEach(file => {
       let obj = {}
@@ -69,7 +69,7 @@ app.get('/getfiles', (req, res) => {
       var fileModifiedTime = new Date(stats.mtime).getTime();
       // console.log(file)
       
-      let realname = file.includes("=")? decodeURIComponent(atob(file)):file
+      let realname = !file.includes(".") ? decodeURIComponent(atob(file)):file
 
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;
@@ -148,7 +148,7 @@ app.get('/filedownload', (req, res) => {
     //   stream.pipe(res);
     // })
 
-    let realname = name.includes("=") ? atob(decodeURIComponent(name)): name;
+    let realname = !name.includes(".") ? atob(decodeURIComponent(name)): name;
 
     res.setHeader('Content-Disposition', `attachment; filename="${realname}"`);
     res.setHeader('Content-Length', fileSize);

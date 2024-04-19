@@ -59,7 +59,7 @@
 
         if (data.length > 0) {
             let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
-                let str = decodeURIComponent(atob(el.fileName))
+                let str = el.fileName.includes("=")? decodeURIComponent(atob(el.fileName)) : el.fileName
                 // console.log(browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]))
 
                 return `
