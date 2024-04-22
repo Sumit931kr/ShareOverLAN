@@ -18,18 +18,18 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 const multer = require("multer");
 
+var dir = './tmp/resource';
+
+if (!fs.existsSync(dir)){
+  fs.mkdirSync(dir, { recursive: true });
+}
+
 const upload = multer({
   dest: "/tmp/resource"
   // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
 
-var dir = './tmp/resource';
-
-if (!fs.existsSync(dir)){
-  console.log("made one")
-    fs.mkdirSync(dir);
-}
 
 
 // // Function to encode the filename
