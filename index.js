@@ -24,7 +24,7 @@ const upload = multer({
 });
 
 
-var dir = './tmp';
+var dir = './tmp/resource';
 
 if (!fs.existsSync(dir)){
   console.log("made one")
@@ -64,7 +64,7 @@ app.get('/media', (req, res) => {
 // Send Array of Downloadable file
 app.get('/getfiles', (req, res) => {
 
-  let resObj = [];
+  let resObjArr = [];
 
  fs.readdir('./tmp/resource', (err, files) => {
 
@@ -83,10 +83,10 @@ app.get('/getfiles', (req, res) => {
       obj['fileModifiedTime'] = fileModifiedTime;
       obj['realname'] = realname
 
-      resObj.push(obj);
+      resObjArr.push(obj);
     });
 
-    res.send(JSON.stringify(resObj))
+    res.send(JSON.stringify(resObjArr))
   });
   // console.log(filesArr)
   // 
