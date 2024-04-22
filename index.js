@@ -24,6 +24,13 @@ const upload = multer({
 });
 
 
+var dir = './tmp';
+
+if (!fs.existsSync(dir)){
+  console.log("made one")
+    fs.mkdirSync(dir);
+}
+
 
 // // Function to encode the filename
 // function encodeFilename(filename) {
