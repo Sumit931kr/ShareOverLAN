@@ -35,7 +35,7 @@ let sizeMeter = {
 // format the second
 function formatSeconds(seconds) {
   if (isNaN(seconds) || seconds < 0) {
-      return "";
+    return "";
   }
 
   const days = Math.floor(seconds / (3600 * 24));
@@ -50,19 +50,19 @@ function formatSeconds(seconds) {
   let result = '';
 
   if (days > 0) {
-      result += days + ' day ';
+    result += days + ' day ';
   }
 
   if (hours > 0) {
-      result += hours + ' hour ';
+    result += hours + ' hour ';
   }
 
   if (minutes > 0) {
-      result += minutes + ' min ';
+    result += minutes + ' min ';
   }
 
   if (remainingSeconds > 0) {
-      result += Math.floor(remainingSeconds) + ' sec';
+    result += Math.floor(remainingSeconds) + ' sec';
   }
 
   return result.trim();
@@ -93,9 +93,7 @@ const getDownloadFiles = async () => {
 
   if (data.length > 0) {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
-
       // console.log(el.fileName)
-
       return `
       <div key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
@@ -130,7 +128,10 @@ const getDownloadFiles = async () => {
 
 var downloadArr = [];
 
-const getZipDownload = () => {
+// zip file name function 
+const zipName = () => new Date(Date.now() + 19800000).toISOString().slice(0, -5) + ".zip"
+
+const getZipDownload = async () => {
   let checkArr = document.querySelectorAll('.inputcheckboxdiv>input[type=checkbox]:checked');
   let downloadAbleFile = [];
 
@@ -139,84 +140,24 @@ const getZipDownload = () => {
   });
 
   // console.log(downloadAbleFile);
+  let body = { arr: JSON.stringify(downloadAbleFile) }
+  // console.log(body)
+  // axios.post('/zipdownload', body,{ responseType: 'blob' })
+  axios.get('/zipdownload?names' + JSON.stringify(downloadAbleFile));
 
-  try {
+  const link = document.createElement('a');
+  link.href = `/zipdownload?names=${JSON.stringify(downloadAbleFile)}`
+  link.setAttribute('download', zipName());
 
-    var count = 0;
-    var zipFilename = "bundle.zip";
+  // Simulate clicking the link to trigger the download
+  link.click();
 
-    if (downloadAbleFile.length <= 0) return
+  // Clean up: remove the link after the download starts
+  link.remove();
 
-    var zip = new JSZip();
-
-    downloadAbleFile.forEach(async function (el, i) {
-
-      let nameToShown = el.includes("=") ? decodeURIComponent(atob(el)) :  el
-
-      downloadArr.push(el);
-      let dcount = downloadArr.indexOf(el);
-      let div = document.createElement('p');
-      div.style.padding = "10px";
-      div.style.position = "relative";
-      let innerHTML = `
-                       <div style="margin-bottom: 10px" class="doutput-txt-${dcount}">${nameToShown}</div>
-                       <div class="doutput-${dcount} output-progess"></div>`
-
-      div.innerHTML = innerHTML;
-      downloadContainer.append(div)
-
-
-      const options = {
-        responseType: 'blob',
-        onDownloadProgress: function (progressEvent) {
-          var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          // console.log(progressEvent)
-          var doutput = document.querySelector('.doutput-' + dcount);
-          // console.log(dcount)
-          doutput.style.width = `${percentCompleted}%`
-          doutput.innerHTML = percentCompleted + "%"
-          if (percentCompleted == 100) {
-            doutput.innerHTML = "File downloaded Successfully"
-            doutput.parentElement.innerHTML = `<div class="cancelme" onclick="this.parentElement.style.display = 'none';" >X</div>
-            ${doutput.parentElement.innerHTML}`;
-          }
-        },
-      };
-
-
-      // console.log(i)
-
-
-      var filename = el
-      const response = await axiosInstance.get('/filedownload?name=' + filename, options);
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      // var img = zip.folder("folder");
-      // loading a file and add it in a zip file
-      zip.file(nameToShown, blob, { binary: true });
-
-      count++
-      if (count == downloadAbleFile.length) {
-        zip.generateAsync({ type: 'blob' }).then(function (content) {
-          saveAs(content, zipFilename);
-        });
-      }
-
-      let index = downloadArr.indexOf(el);
-      downloadArr[index] = downloadArr[index] + Math.random(1);
-    })
-
-  } catch (error) {
-    console.error('Error downloading file:', error.message);
-    if (axios.isAxiosError(error)) {
-      console.error('Axios Error:', error.message);
-      // Handle Axios-specific errors (e.g., network errors)
-    } else {
-      console.error('General Error:', error.message);
-      // Handle other types of errors
-    }
-  }
   clearAllcheckbox();
   buttonDisabledFalse();
+
   downloadAll.style.display = "none";
 
 }
@@ -456,9 +397,7 @@ var curFiles
 const submitValue = (ev) => {
   const inputFile = document.getElementById('forFile');
   curFiles = inputFile.files;
-
   fileArrForCall(curFiles);
-
 }
 
 const fileArrForCall = (files) => {
@@ -534,7 +473,7 @@ document.querySelector('.main-container').addEventListener('paste', (e) => {
 
     let nameArr = files[0].name.split('.');
     let newName = nameArr[0] + Date.now() + "." + nameArr[1];
-    let newFile = {0 :new File([files[0]], newName, { type: files[0].type })}
+    let newFile = { 0: new File([files[0]], newName, { type: files[0].type }) }
     console.log(newFile)
     // fileUploadCode({ file: newFile, i: uploadArr.length });
 

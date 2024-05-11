@@ -1,6 +1,9 @@
 const express = require('express')
 const cors = require('cors');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
+const archiver = require('archiver');
+
 
 const mime = require('mime');
 
@@ -12,6 +15,9 @@ const path = require("path");
 const fs = require("fs");
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use('/download', express.static('./tmp/resource'))
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client')));
@@ -20,7 +26,7 @@ const multer = require("multer");
 
 var dir = './tmp/resource';
 
-if (!fs.existsSync(dir)){
+if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
@@ -29,22 +35,9 @@ const upload = multer({
   // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
+// zip file name function 
+const zipName = () => new Date(Date.now() + 19800000).toISOString().slice(0, -5) + ".zip"
 
-
-
-// // Function to encode the filename
-// function encodeFilename(filename) {
-//   return encodeURIComponent(filename).replace(/%20/g, '+');
-// }
-
-// // Function to decode the filename
-// function decodeFilename(filename) {
-//   return decodeURIComponent(filename.replace(/\+/g, ' '));
-// }
-
-
-// Map to store original filename to encoded filename mapping
-// const filenameMap = new Map();
 
 // Sending the index.html file 
 app.get('/', (req, res) => {
@@ -66,7 +59,7 @@ app.get('/getfiles', (req, res) => {
 
   let resObjArr = [];
 
- fs.readdir('./tmp/resource', (err, files) => {
+  fs.readdir('./tmp/resource', (err, files) => {
 
     files.forEach(file => {
       let obj = {}
@@ -75,8 +68,8 @@ app.get('/getfiles', (req, res) => {
       let fileSizeInBytes = stats.size;
       var fileModifiedTime = new Date(stats.mtime).getTime();
       // console.log(file)
-      
-      let realname = !file.includes(".") ? decodeURIComponent(atob(file)):file
+
+      let realname = !file.includes(".") ? decodeURIComponent(atob(file)) : file
 
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;
@@ -102,9 +95,9 @@ const handleError = (err, res) => {
 
 // Code for Uploading the File
 app.post("/upload",
-upload.single("file" /* name attribute of <file> element in your form */),
+  upload.single("file" /* name attribute of <file> element in your form */),
   (req, res) => {
- 
+
     const tempPath = req.file.path;
 
     let fakename = btoa(encodeURIComponent(req.file.originalname));
@@ -147,15 +140,7 @@ app.get('/filedownload', (req, res) => {
     const stats = fs.statSync(targetPath);
     const fileSize = stats.size;
 
-    // stream.on('open', () => {
-    //   const mimeType = mime.getType(targetPath);
-    //   res.set('Content-Type', mimeType || 'application/octet-stream');
-    //   res.setHeader('Content-disposition', `attachment; filename=${targetPath.split('\\').pop()}`);
-    //   res.setHeader('Content-Length', fileSize);
-    //   stream.pipe(res);
-    // })
-
-    let realname = !name.includes(".") ? atob(decodeURIComponent(name)): name;
+    let realname = !name.includes(".") ? atob(decodeURIComponent(name)) : name;
 
     res.setHeader('Content-Disposition', `attachment; filename="${realname}"`);
     res.setHeader('Content-Length', fileSize);
@@ -177,6 +162,49 @@ app.get('/filedownload', (req, res) => {
 })
 
 
+// Sending the file to download 
+app.get('/zipdownload', async (req, res) => {
+  try {
+    let { names } = req.query;
+    let arr = names
+    let zipFileName = zipName();
+    // console.log(zipFileName)
+
+    if(!arr || typeof(arr) == Object) return
+    let files = JSON.parse(arr);
+    console.log(files)
+
+    res.setHeader('Content-Disposition', `attachment; filename="${zipFileName}"`);
+
+    const archive = archiver('zip', {
+      zlib: { level: 9 } // Sets the compression level
+    });
+
+    archive.on('error', (err) => {
+      console.error(err);
+      res.status(500).send({ error: 'Error creating the zip file' });
+    });
+
+    for (let i = 0; i < files.length; i++) {
+      const targetPath = path.join(__dirname, `./tmp/resource/`, files[i]);
+      if (fs.existsSync(targetPath)) {
+        let realname = !files[i].includes(".") ? decodeURIComponent(atob(files[i])) : files[i];
+        // console.log("realname "+ realname)
+        archive.file(targetPath, { name: realname }); // Add each file to the archive
+      }
+    }
+    archive.pipe(res);
+
+    archive.finalize();
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send({ error: 'Internal server error' });
+  }
+});
+
+
+
+
 
 
 // View file 
@@ -192,28 +220,28 @@ app.get('/viewfile', (req, res) => {
     console.log(range)
 
     if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-        const chunksize = (end - start) + 1;
-        const file = fs.createReadStream(videoPath, { start, end });
-        const head = {
-            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Length': chunksize,
-            'Content-Type': 'video/mp4',
-        };
-        res.writeHead(206, head);
-        file.pipe(res);
-      }
-      else {
-        const head = {
-            'Content-Length': fileSize,
-            'Content-Type': 'video/mp4',
-        };
-        console.log("done")
-        res.writeHead(200, head);
-        fs.createReadStream(videoPath).pipe(res);
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(videoPath, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': 'video/mp4',
+      };
+      res.writeHead(206, head);
+      file.pipe(res);
+    }
+    else {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+      };
+      console.log("done")
+      res.writeHead(200, head);
+      fs.createReadStream(videoPath).pipe(res);
     }
 
 
@@ -249,6 +277,9 @@ const getLocalIpAddress = () => {
   // console.log(ipAddress)
   return ipAddress || 'Unable to retrieve local IP address';
 }
+
+
+
 
 const localIpAddress = getLocalIpAddress();
 // const localIpAddress = "localhost";

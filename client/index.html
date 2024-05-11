@@ -13,11 +13,12 @@
 </head>
 
 <body onload="downloadButton()">
-    <div class="overlay-text" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)" ondragleave="dragOverleave()">
+    <div class="overlay-text" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)"
+        ondragleave="dragOverleave()">
         <!-- <img src="./drop.png" alt=""> -->
         Drop file here...
     </div>
-    <div class="main-container"  ondragover="dragOverHandler(event)">
+    <div class="main-container" ondragover="dragOverHandler(event)">
         <main>
             <div id="nearby_people">
                 <div class="people-container">
@@ -30,7 +31,9 @@
                         <div class="pc-header">
                             <button class="pch-download" onclick="downloadButton()">Downlaod Section</button>
                             <!-- <div> ip </div> -->
-                            <button class="pch-downloadAll" onclick="getZipDownload()">Download All</button>
+                            <!-- <form method="post"> -->
+                                <button class="pch-downloadAll" onclick="getZipDownload()">Download All</button>
+                            <!-- </form> -->
                             <button class="pch-upload" onclick="uploadButton()">Upload Section</button>
                         </div>
                     </div>
@@ -40,7 +43,7 @@
                             <label for="forFile" id="drop_zone">+</label>
                             <input type="file" id="forFile" enctype="multipart/form-data" onchange="submitValue()"
                                 multiple="multiple">
-                                <!-- <div>
+                            <!-- <div>
                                     <input type="checkbox" checked name="protectedMethod" id="">
                                     Protected Method
                                 </div> -->
@@ -56,11 +59,8 @@
                     </div>
                 </div>
             </div>
-
         </main>
-
     </div>
-
 </body>
 <script async src="./script.js"></script>
 
