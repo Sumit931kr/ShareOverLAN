@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-chat</title>
+    <link rel="stylesheet" href="./css/chat_style.css">
+
+</head>
+
+<body>
+    <nav>
+        <img src="./assets/pngwing.png" alt="logo" class="logo">
+        <p id="first">I-Web Chat</p>
+    </nav>
+    <div class="container">
+        <!-- <div class="onlinesection">
+
+        </div> -->
+        <!-- <div class="message left"> <p >Sumit
+        </p> Hlo1 left</div>
+        <div class="message center"><span >Sumit
+            </span> join the chat</div>
+        <div class="message right"><p>You
+            </p> Hlo2 right</div> -->
+    </div>
+    <div class="send">
+        <form action="#" id="send-container">
+            <textarea type="text" name="messageInp" id="messageInp"></textarea>
+            <button id="btn">Send</button>
+        </form>
+    </div>
+    <!-- <button id="clear">Clear</button> -->
+</body>
+
+<!-- <script src="https://iwebbackend.herokuapp.com/socket.io/socket.io.js"></script> -->
+<!-- <script src="http://localhost:5000/socket.io/socket.io.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="./js/chat_script.js"></script>
+
+</html>

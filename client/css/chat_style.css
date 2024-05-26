@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0in;
+}
+
+
+body {
+    height: 100vh;
+    /* background-image: linear-gradient(rgb(92, 100, 221), purple); */
+    background-color: rgba(18, 37, 77, 0.885);
+    color: white;
+}
+
+.logo {
+    display: block;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+}
+
+#first {
+    text-align: center;
+}
+
+/*  Container specific stuff*/
+.container {
+    max-width: 1000px;
+    /* background-color: red; */
+    border: 2px solid black;
+    padding: 10px;
+    margin-bottom: 23px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    margin: auto;
+    height: 60vh;
+
+}
+
+/* USer ONline Section */
+
+.onlinesection {
+    max-width: 1000px;
+    border: 2px solid black;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    height: 5vh;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+}
+
+.onlinesection>div {
+    text-align: center;
+   
+
+}
+
+.dot {
+    height: 1.5vh;
+    width: 1.5vh;
+    background-color: rgb(49 246 16);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 2px 3px 12px 1px rgb(49 246 16);
+    margin: 0.8vw;
+    
+}
+
+.oname {
+    color: white;
+    display: inline-block;
+    padding-top: 10px;
+}
+
+
+
+
+
+
+
+.message {
+    background-color: rgb(214, 211, 211);
+    width: 24%;
+    padding: 10px;
+    margin: 17px 12px;
+    border: 2px solid black;
+    border-radius: 10px;
+    color: rgb(0, 0, 0);
+}
+
+.left {
+    float: left;
+    clear: both;
+}
+
+.center {
+    margin: auto;
+    clear: both;
+    width: 50%;
+    border-radius: 20%;
+    text-align: center;
+    background-color: rgb(202, 202, 202);
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    padding: 0.5% 0;
+}
+
+.right {
+    float: right;
+    clear: both;
+
+}
+
+.right p {
+    color: rgb(0, 255, 42);
+}
+
+
+p,
+span {
+    /* background-color: cadetblue; */
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-bottom: 2%;
+    font-size: 1.1rem;
+}
+
+
+
+
+
+/* Send stuff */
+
+#send-container {
+    display: block;
+    margin: auto;
+    text-align: center;
+    max-width: 1000px;
+    width: 100%;
+}
+
+#messageInp {
+    width: 85%;
+    border-radius: 0%;
+    border-radius: 5px;
+    height: 34px;
+    font-size: 22px;
+}
+
+#btn {
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 34px;
+    width: 10%;
+}

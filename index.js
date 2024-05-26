@@ -48,6 +48,10 @@ app.get('/media', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'media.html'))
 })
 
+app.get('/chat', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'client', 'chat.html'))
+})
+
 // Send Array of Downloadable file
 app.get('/getfiles', GetFiles)
 
@@ -66,9 +70,42 @@ app.get('/viewfile', ViewFile)
 
 const localIpAddress = getLocalIpAddress();
 
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+//   console.log("Server is Listening at ");
+//   console.log(`http://${localIpAddress}:${PORT}`);
+// })
+
+
+const io = require("socket.io")(app.listen(PORT , ()=>{
+  console.log('Socket Serer Started && ');
   console.log("Server is Listening at ");
   console.log(`http://${localIpAddress}:${PORT}`);
-})
+}),{
+  cors : {
+      origin : '*',
+  },
+});
 
+
+// app.get('/', (req, res) => {
+//   res.send("<h1>Good morning  Baccho</h1>")
+// });
+
+const users = {};
+io.on('connection',socket =>{
+  socket.on('new-user-joined', name =>{
+     console.log("new user name is " + name);
+      users[socket.id] = name;
+      socket.broadcast.emit('user-joined', name);
+  })
+  socket.on('send', message =>{
+      socket.broadcast.emit('receive', {message: message , name : users[socket.id]})
+  });
+
+  socket.on('disconnect', message =>{
+      socket.broadcast.emit('left', users[socket.id])
+      delete users[socket.id];
+  });
+
+})
 
