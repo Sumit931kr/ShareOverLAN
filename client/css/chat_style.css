@@ -53,7 +53,7 @@ body {
 
 .onlinesection>div {
     text-align: center;
-   
+
 
 }
 
@@ -65,7 +65,7 @@ body {
     display: inline-block;
     box-shadow: 2px 3px 12px 1px rgb(49 246 16);
     margin: 0.8vw;
-    
+
 }
 
 .oname {
@@ -78,16 +78,67 @@ body {
 
 
 
-
+.sender_name {
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.1rem;
+}
 
 .message {
     background-color: rgb(214, 211, 211);
-    width: 24%;
-    padding: 10px;
+    min-width: 25%;
+    max-width: 65%;
+    height: max-content;
+    padding: 0 10px 10px 10px;
     margin: 17px 12px;
     border: 2px solid black;
     border-radius: 10px;
     color: rgb(0, 0, 0);
+}
+
+.message>div {
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.other_options_container {
+    position: relative;
+}
+
+.other_options_container:hover>.other_options {
+    display: flex;
+}
+
+.other_options_container>span {
+    transform: rotate(180deg);
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.other_options {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 3px;
+    background-color: rgb(214, 211, 211);
+    
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.other_options>div {
+   
+    width: max-content;
+    padding: 3px;
+    cursor: pointer;
+z-index: 34;
 }
 
 .left {
@@ -105,6 +156,10 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     padding: 0.5% 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 .right {
@@ -113,9 +168,6 @@ body {
 
 }
 
-.right p {
-    color: rgb(0, 255, 42);
-}
 
 
 p,
@@ -123,7 +175,6 @@ span {
     /* background-color: cadetblue; */
     font-weight: bold;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    margin-bottom: 2%;
     font-size: 1.1rem;
 }
 
@@ -134,11 +185,13 @@ span {
 /* Send stuff */
 
 #send-container {
-    display: block;
     margin: auto;
     text-align: center;
     max-width: 1000px;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #messageInp {
@@ -155,4 +208,10 @@ span {
     border-radius: 5px;
     height: 34px;
     width: 10%;
+}
+
+
+.message_content {
+    word-wrap: break-word;
+    white-space: break-spaces;
 }

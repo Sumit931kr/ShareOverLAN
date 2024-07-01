@@ -30,7 +30,7 @@ const getLocalIpAddress = () => {
   return ipAddress || 'Unable to retrieve local IP address';
 }
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 6969
 
 const localIpAddress = getLocalIpAddress();
 

@@ -8,8 +8,17 @@ const messageContainer = document.querySelector(".container");
 const onlineSec = document.querySelector('.onlinesection');
 const username = [];
 
+const handleCopyMessage = (e) =>{
+  var val = e.target.getAttribute('dataAttributes');
+  navigator.clipboard.writeText(val)
+  e.target.innerHTML = 'Copied !!';
 
-var audio = new Audio('ting.mp3');
+  setTimeout(() => {
+    e.target.innerHTML = 'Copy Message'
+  }, 3000);
+}
+
+var audio = new Audio('./assets/ting.mp3');
 
 const append = (name, message, position) => {
 
@@ -18,7 +27,16 @@ const append = (name, message, position) => {
     messageElement.innerHTML = `<span>${name}</span>${message}`;
   }
   else {
-    messageElement.innerHTML = `<p>${name}</p>${message}`;
+    messageElement.innerHTML = `<div>
+                                    <div class="sender_name" style="color: rgb(0, 255, 42);">${name}</div> 
+                                    <div class="other_options_container">
+                                      <span>^</span>
+                                      <div class="other_options">
+                                        <div dataAttributes="${message}" onclick="handleCopyMessage(event)">Copy Message</div>
+                                       </div>
+                                    </div>
+                                </div> 
+                                <div class="message_content">${message}</div>`;
 
   }
   messageElement.classList.add('message');
@@ -48,18 +66,33 @@ const onlineuser = () => {
   }
 }
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (messageInput.value) {
+
+const handleSendBtn = () =>{
+  let val = messageInput.value.trim();
+  if (val) {
     const message = messageInput.value
     append('you', `${message}`, 'right');
     socket.emit('send', message);
     messageInput.value = ""
   }
+}
+// (send button)
+document.querySelector('.send_btn').addEventListener('click',()=>{
+handleSendBtn()
 })
 
 
-const name = prompt("Enter Your name to Join");
+// enter key to send message
+document.getElementById("messageInp").addEventListener("keypress", e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    handleSendBtn()
+  }
+});
+
+
+let name = prompt("Enter Your name to Join");
+if(!name) name = Math.floor(Math.random()*1000000)
+
 socket.emit('new-user-joined', name)
 if(name){
   append(name,'Joined the chat', 'center')
@@ -83,3 +116,6 @@ socket.on('left', user => {
 const clear = document.getElementById('clear').addEventListener('click',()=>{
   username.splice(0,username.length);
 })
+
+
+
