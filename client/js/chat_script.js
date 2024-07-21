@@ -10,12 +10,24 @@ const username = [];
 
 const handleCopyMessage = (e) =>{
   var val = e.target.getAttribute('dataAttributes');
-  navigator.clipboard.writeText(val)
-  e.target.innerHTML = 'Copied !!';
 
-  setTimeout(() => {
-    e.target.innerHTML = 'Copy Message'
-  }, 3000);
+  const textArea = document.createElement("textarea");
+  textArea.value = val;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+        e.target.innerHTML = 'Copied !!';
+
+    setTimeout(() => {
+      e.target.innerHTML = 'Copy Message'
+    }, 3000);
+  } catch (err) {
+    console.error('Unable to copy to clipboard', err);
+  }
+  document.body.removeChild(textArea);
+ 
 }
 
 var audio = new Audio('./assets/ting.mp3');
@@ -117,5 +129,8 @@ const clear = document.getElementById('clear').addEventListener('click',()=>{
   username.splice(0,username.length);
 })
 
-
+function auto_grow(element) {
+  element.style.height = "5px";
+  element.style.height = (element.scrollHeight) + "px";
+}
 

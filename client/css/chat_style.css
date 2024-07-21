@@ -200,6 +200,11 @@ span {
     border-radius: 5px;
     height: 34px;
     font-size: 22px;
+
+    resize: none;
+    overflow: hidden;
+    min-height: 50px;
+    max-height: 100px;
 }
 
 #btn {
