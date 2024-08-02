@@ -79,7 +79,11 @@ const localIpAddress = getLocalIpAddress();
 const io = require("socket.io")(app.listen(PORT , ()=>{
   console.log('Socket Serer Started && ');
   console.log("Server is Listening at ");
-  console.log(`http://${localIpAddress}:${PORT}`);
+
+    console.log(`--> Local:   http://localhost:${PORT}`);
+  localIpAddress.map((el)=>{
+    console.log(`--> Network: http://${el}:${PORT}`);
+  })
 }),{
   cors : {
       origin : '*',
