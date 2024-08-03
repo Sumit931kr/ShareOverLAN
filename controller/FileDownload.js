@@ -1,12 +1,13 @@
 const path = require("path");
 const fs = require("fs");
+const { downloadFileLog } = require('../extra/Logging')
 
-const FileDownload = (req,res) =>{
-    
+const FileDownload = (req, res) => {
+
   let { name } = req.query;
 
   const targetPath = path.join(__dirname, `../tmp/resource/` + name);
-// console.log(targetPath)
+  // console.log(targetPath)
 
   if (!fs.existsSync(targetPath)) {
     return res.status(404).send('File not found');
@@ -32,6 +33,14 @@ const FileDownload = (req,res) =>{
       console.error('Error streaming file:', err);
       res.status(500).send('Internal Server Error');
     });
+
+    // log
+    var ip = req.headers['x-forwarded-for'] ||
+      req.connection.remoteAddress
+    ip = ip.replace(/::ffff:/, '');
+
+    downloadFileLog(ip,realname)
+
   } catch (error) {
     console.log("error " + error)
     res.send('Something Went wrong')

@@ -1,0 +1,33 @@
+***************************************************************************
+        
+
+ Server started at 2024-08-03T10:18:46 
+
+ Socket Server Started 
+
+ Server is Listening at 
+
+ --> Local:   http://localhost:6776
+ --> Network: http://192.168.201.1:6776
+ --> Network: http://192.168.26.1:6776
+ --> Network: http://192.168.1.5:6776
+
+
+[2024-08-03T10:18:57] [192.168.1.5] Get All the Files
+[2024-08-03T10:19:00] [192.168.1.5] Download File [Answer.txt]
+[2024-08-03T10:19:13] [192.168.1.5] Upload File [IGNOU December-2023_ HALL TICKET_ADMIT CARD.pdf]
+***************************************************************************
+        
+
+ Server started at 2024-08-03T10:19:54 
+
+ Socket Server Started 
+
+ Server is Listening at 
+
+ --> Local:   http://localhost:6776
+ --> Network: http://192.168.201.1:6776
+ --> Network: http://192.168.26.1:6776
+ --> Network: http://192.168.1.5:6776
+
+

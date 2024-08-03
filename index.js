@@ -13,12 +13,14 @@ const ViewFile = require('./controller/ViewFile');
 
 // extra
 const getLocalIpAddress = require('./extra/GetLocalIpAdress')
+const getLocalTime = require('./extra/GetLocalTime')
 
 dotenv.config();
 
 const PORT = process.env.PORT || 6969
 const path = require("path");
 const fs = require("fs");
+const { startingServerLog } = require('./extra/Logging');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,7 +50,7 @@ app.get('/media', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'media.html'))
 })
 
-app.get('/chat', (req, res)=>{
+app.get('/chat', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'chat.html'))
 })
 
@@ -56,7 +58,7 @@ app.get('/chat', (req, res)=>{
 app.get('/getfiles', GetFiles)
 
 // Code for Uploading the File
-app.post("/upload",upload.single("file"),UploadHandle);
+app.post("/upload", upload.single("file"), UploadHandle);
 
 // Sending the file to download 
 app.get('/filedownload', FileDownload)
@@ -70,23 +72,30 @@ app.get('/viewfile', ViewFile)
 
 const localIpAddress = getLocalIpAddress();
 
-// app.listen(PORT, () => {
-//   console.log("Server is Listening at ");
-//   console.log(`http://${localIpAddress}:${PORT}`);
-// })
 
-
-const io = require("socket.io")(app.listen(PORT , ()=>{
+const io = require("socket.io")(app.listen(PORT, () => {
+  console.log("Server started at " + getLocalTime())
   console.log('Socket Serer Started && ');
   console.log("Server is Listening at ");
 
-    console.log(`--> Local:   http://localhost:${PORT}`);
-  localIpAddress.map((el)=>{
+  console.log(`--> Local:   http://localhost:${PORT}`);
+  localIpAddress.map((el) => {
     console.log(`--> Network: http://${el}:${PORT}`);
   })
-}),{
-  cors : {
-      origin : '*',
+
+  const folderPath = './log';
+
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
+    // console.log('Folder created!');
+  } else {
+    // console.log('Folder already exists!');
+  }
+
+  startingServerLog(PORT)
+}), {
+  cors: {
+    origin: '*',
   },
 });
 
@@ -96,19 +105,19 @@ const io = require("socket.io")(app.listen(PORT , ()=>{
 // });
 
 const users = {};
-io.on('connection',socket =>{
-  socket.on('new-user-joined', name =>{
-     console.log("new user name is " + name);
-      users[socket.id] = name;
-      socket.broadcast.emit('user-joined', name);
+io.on('connection', socket => {
+  socket.on('new-user-joined', name => {
+    console.log("new user name is " + name);
+    users[socket.id] = name;
+    socket.broadcast.emit('user-joined', name);
   })
-  socket.on('send', message =>{
-      socket.broadcast.emit('receive', {message: message , name : users[socket.id]})
+  socket.on('send', message => {
+    socket.broadcast.emit('receive', { message: message, name: users[socket.id] })
   });
 
-  socket.on('disconnect', message =>{
-      socket.broadcast.emit('left', users[socket.id])
-      delete users[socket.id];
+  socket.on('disconnect', message => {
+    socket.broadcast.emit('left', users[socket.id])
+    delete users[socket.id];
   });
 
 })
