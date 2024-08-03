@@ -69,6 +69,7 @@ header>button:hover {
 
 .header-section {
     position: fixed;
+    z-index: 8;
     background-color: rgb(44 61 97);
     width: 100%;
     top: 0%;
