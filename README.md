@@ -32,7 +32,7 @@ the problem have faced if any me contact (Old Yoda)
 
 ## License
 
-This project is licensed under Beerware License..
+This project is licensed under Beerware License... (even though I don't drink, we will figure something out)
 
 
 
