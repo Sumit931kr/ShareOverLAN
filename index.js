@@ -10,6 +10,7 @@ const FileDownload = require('./controller/FileDownload')
 const ZipDownload = require('./controller/Zipdownload');
 const UploadHandle = require('./controller/UploadHandle');
 const ViewFile = require('./controller/ViewFile');
+const DeleteFile = require('./controller/DeleteFile')
 
 // extra
 const getLocalIpAddress = require('./extra/GetLocalIpAdress')
@@ -21,6 +22,7 @@ const PORT = process.env.PORT || 6969
 const path = require("path");
 const fs = require("fs");
 const { startingServerLog } = require('./extra/Logging');
+const Access = require('./controller/Access');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -66,8 +68,14 @@ app.get('/filedownload', FileDownload)
 // Sending the file to download 
 app.get('/zipdownload', ZipDownload)
 
+// Delete the file
+app.delete('/deletefile', DeleteFile)
+
 // View file 
 app.get('/viewfile', ViewFile)
+
+// Access the Admin
+app.get('/access', Access)
 
 
 const localIpAddress = getLocalIpAddress();

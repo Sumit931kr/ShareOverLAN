@@ -34,6 +34,8 @@ const FileDownload = (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 
+    res.status(200)
+
     // log
     var ip = req.headers['x-forwarded-for'] ||
       req.connection.remoteAddress

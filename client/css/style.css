@@ -14,7 +14,8 @@ body {
     position: relative;
     transition: all 0.5s ease;
 }
-.overlay-text{
+
+.overlay-text {
     display: none;
     font-size: 40px;
     position: absolute;
@@ -193,6 +194,17 @@ input[type="file"] {
     width: 20%;
 }
 
+.file_delete {
+    width: 20px;
+    cursor: pointer;
+   
+}
+
+.file_delete>img {
+    width: 100%;
+    filter: invert(1);
+}
+
 /* 
 .file_view{
     color: white;
@@ -205,7 +217,8 @@ align-items: center;
 }
  */
 
-.file_download , .view{
+.file_download,
+.view {
     /* width: 20%; */
     color: white;
     background-color: rgba(41, 41, 187, 0.538);
@@ -217,7 +230,7 @@ align-items: center;
     text-decoration: none;
 }
 
-.view{
+.view {
     background-color: #04AA6D;
 }
 
@@ -259,7 +272,7 @@ button>a,
     cursor: pointer;
 }
 
-.uploadFileGap{
+.uploadFileGap {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -268,9 +281,9 @@ button>a,
 }
 
 
-.inputcheckbox{
-width: 25px;
-aspect-ratio: 1/1;
+.inputcheckbox {
+    width: 25px;
+    aspect-ratio: 1/1;
 }
 
 

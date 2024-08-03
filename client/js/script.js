@@ -85,6 +85,7 @@ const manageByte = (num) => {
 
 var DownloadableFileData = [];
 
+// get downlaod Files
 const getDownloadFiles = async () => {
   const response = await axios.get('/getFiles');
   let data = response.data;
@@ -99,25 +100,11 @@ const getDownloadFiles = async () => {
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
         <div class="file_name">${el.realname}</div>
         <div class="file_size">${manageByte(el.fileSize)}</div>
+        <div class="file_delete"><img src="../assets/delete.png" data-filename="${el.fileName}" onclick="deleteFile(event)" /></div>
        <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
       `
-      //   ${browserSupportedExtensions.includes(str.split('.')[str.split('.').length - 1]) ?
-      //   `<a class="file_downlaod view" target="_blank" href="/viewfile?name=${el.fileName}"> View </a>` : `<div></div>`
-      // } 
-
-      // return `
-      // <div key="${index}"> 
-      //   <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
-      //   <div class="file_name">${el.fileName}</div>
-      //   <div class="file_size">${manageByte(el.fileSize)}</div>
-      //   <button class="file_download" onclick="downloadFile('${el.fileName}')"> Download
-      //    </button>
-      // </div>
-      //   <hr/>
-      // <br>
-      // `
     }).join("")
     downlaodSection.innerHTML = mappedData
 
@@ -125,6 +112,59 @@ const getDownloadFiles = async () => {
   }
   //  downloadButton();
 }
+
+const checkAccessToken = async (token) => {
+  if (!token) return false
+  try {
+    const response = await axiosInstance.get('/access?accessToken=' + token);
+    if (response.status == 200) {
+      sessionStorage.setItem('accessToken', token)
+      return true
+    }
+    else return false
+  } catch (error) {
+    console.log("some Error Occured")
+    console.log(error)
+    sessionStorage.removeItem('accessToken')
+    return false
+  }
+}
+
+// delete file function 
+const deleteFile = async (e) => {
+
+  let accessToken = sessionStorage.getItem('accessToken');
+  if (!accessToken) {
+    let token = prompt("Enter the pass Code");
+    if (!token) return
+    let isAccess = await checkAccessToken(token);
+    console.log(isAccess)
+    if (!isAccess) {
+      alert("Wrong token")
+    } else {
+      alert("verified ,try again")
+    }
+  }
+  else {
+    
+    let filename = e.target.getAttribute('data-filename');
+    if (!filename) {
+      console.log("couldn't fetch name from data attributes")
+      return
+    }
+    console.log(filename)
+
+    const response = await axiosInstance.delete('/deletefile?name=' + filename);
+    console.log(response)
+    if (response.status = 200) {
+      console.log("file Deleted")
+      getDownloadFiles()
+    }
+  }
+
+}
+
+
 
 var downloadArr = [];
 
@@ -201,14 +241,6 @@ const downloadFile = async (str) => {
 
   div.innerHTML = innerHTML;
   downloadContainer.append(div)
-
-  // // const response = await axios.get('/filedownload?name=' + str, options);
-  // const response = await axiosInstance.get('/filedownload?name=' + str, options);
-
-  // // Create a blob from the response data
-  // const blob = new Blob([response.data], { type: response.headers['content-type'] });
-
-  // console.log(str);
 
   const options = {
     responseType: 'blob',

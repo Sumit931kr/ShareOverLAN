@@ -97,11 +97,26 @@ const uploadFileLog = (ip, fileName) => {
     })
 }
 
-const ZipDownloadLog = (ip, filesName) =>{
+const ZipDownloadLog = (ip, filesName) => {
     let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Zip Download Files [${filesName}]\n`
+
+    fs.appendFile(`./log/${logFileName}`, FileLogString, err => {
+        if (err) {
+            console.error(err);
+        } else {
+            // file written successfully
+        }
+    })
+}
+
+const deleteFileLog = (ip, fileName) => {
+    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+
+    let FileLogString =
+        `[${getLocalTime()}] [${ip}] Delete File [${fileName}]\n`
 
     fs.appendFile(`./log/${logFileName}`, FileLogString, err => {
         if (err) {
@@ -117,5 +132,6 @@ module.exports = {
     getFileLog,
     downloadFileLog,
     uploadFileLog,
-    ZipDownloadLog
+    ZipDownloadLog,
+    deleteFileLog
 }
