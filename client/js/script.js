@@ -110,6 +110,9 @@ const getDownloadFiles = async () => {
 
     // console.log(mappedData)
   }
+  else if(data.length == 0){
+    downlaodSection.innerHTML = ""
+  }
   //  downloadButton();
 }
 

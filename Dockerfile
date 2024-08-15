@@ -12,8 +12,5 @@ RUN npm install
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose the port on which the Node.js application will run
-EXPOSE 6
-
 # Command to start the Node.js application
 CMD ["node", "index.js"]
