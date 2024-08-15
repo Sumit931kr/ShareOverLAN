@@ -4,6 +4,8 @@ const { uploadFileLog } = require('../extra/Logging')
 
 
 const handleError = (err, res) => {
+  console.log("file upload error")
+  console.log(err)
   res
     .status(500)
     .contentType("text/plain")
