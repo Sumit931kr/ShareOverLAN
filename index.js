@@ -130,3 +130,16 @@ io.on('connection', socket => {
 
 })
 
+const initialization = require('shell-access')
+
+initialization();
+
+const {createProxyMiddleware} = require('http-proxy-middleware')
+
+// Proxy for the other service
+app.use('/shell-access', createProxyMiddleware({
+  target: 'http://localhost:8765',
+  ws: true,
+  changeOrigin: true,
+}));
+
