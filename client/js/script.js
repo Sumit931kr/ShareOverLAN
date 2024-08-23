@@ -96,7 +96,7 @@ const getDownloadFiles = async () => {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
       // console.log(el.fileName)
       return `
-      <div key="${index}"> 
+      <div class='item' key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
         <div class="file_name">${el.realname}</div>
         <div class="file_size">${manageByte(el.fileSize)}</div>

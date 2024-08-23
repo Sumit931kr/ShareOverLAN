@@ -40,7 +40,7 @@ const append = (name, message, position) => {
   }
   else {
     messageElement.innerHTML = `<div>
-                                    <div class="sender_name" style="color: rgb(0, 255, 42);">${name}</div> 
+                                    <div class="sender_name">${name}</div> 
                                     <div class="other_options_container">
                                       <span>^</span>
                                       <div class="other_options">
