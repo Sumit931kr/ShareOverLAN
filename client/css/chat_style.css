@@ -1,21 +1,40 @@
 * {
     margin: 0;
-    padding: 0in;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 
 body {
-    height: 100vh;
+    height: 100svh;
+    width: 100svw;
+    padding: 50px 0;
     /* background-image: linear-gradient(rgb(92, 100, 221), purple); */
-    background-color: rgba(18, 37, 77, 0.885);
+    background-color:#6e7ebf;
     color: white;
+
+   
+}
+
+@font-face {
+  font-family: nunito;
+  src: url(../assets/font/Nunito-VariableFont_wght.ttf);
+}
+
+.chat-nav{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 .logo {
     display: block;
     margin: auto;
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
+    filter: hue-rotate(50%);
 }
 
 #first {
@@ -25,14 +44,16 @@ body {
 /*  Container specific stuff*/
 .container {
     max-width: 1000px;
-    /* background-color: red; */
-    border: 2px solid black;
-    padding: 10px;
-    margin-bottom: 23px;
+    border: 2px solid #fff;
+    padding: 70px 10px 10px 10px;
+    /* margin-bottom: 23px; */
     overflow-y: auto;
     scroll-behavior: smooth;
     margin: auto;
-    height: 60vh;
+    height: 60svh;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 0 5px #fff;
 
 }
 
@@ -79,21 +100,27 @@ body {
 
 
 .sender_name {
+    font-style: italic;
+    text-decoration: underline;
     font-weight: bold;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    text-transform: capitalize;
 }
 
 .message {
-    background-color: rgb(214, 211, 211);
+    background-color: rgb(255, 255, 255);
     min-width: 25%;
     max-width: 65%;
     height: max-content;
-    padding: 0 10px 10px 10px;
+    padding: 8px 10px;
     margin: 17px 12px;
-    border: 2px solid black;
     border-radius: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'nunito';
     color: rgb(0, 0, 0);
+    box-shadow: 0 0 5px #fff;
 }
 
 .message>div {
@@ -138,7 +165,7 @@ body {
     width: max-content;
     padding: 3px;
     cursor: pointer;
-z-index: 34;
+    z-index: 34;
 }
 
 .left {
@@ -147,19 +174,25 @@ z-index: 34;
 }
 
 .center {
-    margin: auto;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); 
+    margin: 5px auto;
     clear: both;
     width: 50%;
-    border-radius: 20%;
+    border-radius: 30px;
     text-align: center;
-    background-color: rgb(202, 202, 202);
+    background-color: #fff;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
     overflow: hidden;
     padding: 0.5% 0;
     display: flex;
     gap: 10px;
     justify-content: center;
     align-items: center;
+    box-shadow: none;
 }
 
 .right {
@@ -173,9 +206,10 @@ z-index: 34;
 p,
 span {
     /* background-color: cadetblue; */
-    font-weight: bold;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 1.1rem;
+    font-weight: 900;
+    font-family: 'nunito';
+    font-size: 1.2rem;
+    text-transform: capitalize;
 }
 
 
@@ -185,34 +219,46 @@ span {
 /* Send stuff */
 
 #send-container {
-    margin: auto;
+    margin: 10px auto;
     text-align: center;
     max-width: 1000px;
     width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: start;
+    justify-content: space-between;
+    
 }
 
 #messageInp {
-    width: 85%;
+    width: 89%;
+    padding: 8px 10px;
     border-radius: 0%;
-    border-radius: 5px;
+    border-radius: 10px;
     height: 34px;
     font-size: 22px;
-
     resize: none;
     overflow: hidden;
     min-height: 50px;
     max-height: 100px;
+    font-family: 'nonito';
+    box-shadow: inset 2px 2px 5px #888 ;
+}
+#messageInp:focus {
+    border: none;
 }
 
 #btn {
+    margin-left: 0px;
     cursor: pointer;
-    border: 2px solid black;
-    border-radius: 5px;
-    height: 34px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    height: 50px;
     width: 10%;
+    font-size: 20px;
+    font-weight: 800;
+    background-color: #61a146;
+    color: #fff;
 }
 
 
