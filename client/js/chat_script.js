@@ -7,6 +7,7 @@ const messageInput = document.getElementById('messageInp');
 const messageContainer = document.querySelector(".container");
 const onlineSec = document.querySelector('.onlinesection');
 const username = [];
+var audio = new Audio('./assets/ting.mp3');
 
 const handleCopyMessage = (e) =>{
   var val = e.target.getAttribute('dataAttributes');
@@ -30,7 +31,7 @@ const handleCopyMessage = (e) =>{
  
 }
 
-var audio = new Audio('./assets/ting.mp3');
+
 
 const append = (name, message, position) => {
 
@@ -85,25 +86,28 @@ const handleSendBtn = () =>{
     const message = messageInput.value
     append('you', `${message}`, 'right');
     socket.emit('send', message);
-    messageInput.value = ""
   }
+  setTimeout(() => { 
+    messageInput.value = ''
+  }, 100);
 }
 // (send button)
 document.querySelector('.send_btn').addEventListener('click',()=>{
-handleSendBtn()
+handleSendBtn();
 })
 
 
 // enter key to send message
-document.getElementById("messageInp").addEventListener("keypress", e => {
+messageInput.addEventListener("keypress", e => {
   if (e.key === "Enter" && !e.shiftKey) {
-    handleSendBtn()
+    handleSendBtn();
   }
 });
 
 
 let name = prompt("Enter Your name to Join");
-if(!name) name = Math.floor(Math.random()*1000000)
+if(!name) name = Math.floor(Math.random()*1000000);
+messageInput.focus()
 
 socket.emit('new-user-joined', name)
 if(name){
@@ -122,12 +126,13 @@ socket.on('receive', data => {
 })
 
 socket.on('left', user => {
-  append(`${user.name} `, 'Left the Chat', 'center');
+  console.log(user)
+  append(`${user} `, 'Left the Chat', 'center');
 })
 
-const clear = document.getElementById('clear').addEventListener('click',()=>{
-  username.splice(0,username.length);
-})
+// const clear = document.getElementById('clear').addEventListener('click',()=>{
+//   username.splice(0,username.length);
+// })
 
 function auto_grow(element) {
   element.style.height = "5px";

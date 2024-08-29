@@ -8,20 +8,20 @@
 body {
     height: 100svh;
     width: 100svw;
-    padding: 50px 0;
+    padding: 10px 0;
     /* background-image: linear-gradient(rgb(92, 100, 221), purple); */
-    background-color:#6e7ebf;
+    background-color: #6e7ebf;
     color: white;
 
-   
+
 }
 
 @font-face {
-  font-family: nunito;
-  src: url(../assets/font/Nunito-VariableFont_wght.ttf);
+    font-family: nunito;
+    src: url(../assets/font/Nunito-VariableFont_wght.ttf);
 }
 
-.chat-nav{
+.chat-nav {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@ body {
 .container {
     max-width: 1000px;
     border: 2px solid #fff;
-    padding: 70px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
     /* margin-bottom: 23px; */
     overflow-y: auto;
     scroll-behavior: smooth;
@@ -143,6 +143,10 @@ body {
     color: black;
     font-size: 16px;
     cursor: pointer;
+    position: absolute;
+    right: 0px;
+    top: 18px;
+
 }
 
 .other_options {
@@ -153,7 +157,7 @@ body {
     border-radius: 8px;
     padding: 3px;
     background-color: rgb(214, 211, 211);
-    
+
     display: none;
     justify-content: center;
     align-items: center;
@@ -161,7 +165,7 @@ body {
 }
 
 .other_options>div {
-   
+
     width: max-content;
     padding: 3px;
     cursor: pointer;
@@ -174,10 +178,10 @@ body {
 }
 
 .center {
-    position: absolute;
+    /* position: absolute;
     top: 10px;
     left: 50%;
-    transform: translateX(-50%); 
+    transform: translateX(-50%);  */
     margin: 5px auto;
     clear: both;
     width: 50%;
@@ -226,7 +230,7 @@ span {
     display: flex;
     align-items: start;
     justify-content: space-between;
-    
+
 }
 
 #messageInp {
@@ -241,8 +245,9 @@ span {
     min-height: 50px;
     max-height: 100px;
     font-family: 'nonito';
-    box-shadow: inset 2px 2px 5px #888 ;
+    box-shadow: inset 2px 2px 5px #888;
 }
+
 #messageInp:focus {
     border: none;
 }
@@ -265,4 +270,30 @@ span {
 .message_content {
     word-wrap: break-word;
     white-space: break-spaces;
+}
+
+/* scroll css */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /* box-shadow: inset 0 0 5px black; */
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #999999;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #c4c4c4;
 }
