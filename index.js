@@ -130,6 +130,8 @@ io.on('connection', socket => {
 
 })
 
+
+// shell-access lib initialized
 const initialization = require('shell-access')
 
 initialization();
