@@ -6,7 +6,7 @@ const FileDownload = (req, res) => {
 
   let { name } = req.query;
 
-  const targetPath = path.join(__dirname, `../tmp/resource/` + name);
+  const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);
   // console.log(targetPath)
 
   if (!fs.existsSync(targetPath)) {

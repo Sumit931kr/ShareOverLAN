@@ -220,7 +220,18 @@ const buttonDisabledTrue = () => {
     el.disabled = true;
     el.style.opacity = "0.4";
     el.style.cursor = "no-drop";
+    el.style.pointerEvents = "none";
   })
+
+
+  let fileDeleteBtn = document.querySelectorAll('.file_delete')
+  fileDeleteBtn.forEach((el)=>{
+    el.disabled = true;
+    el.style.opacity = "0.4";
+    el.style.cursor = "no-drop";
+    el.style.pointerEvents = "none";
+  })
+
 }
 
 const buttonDisabledFalse = () => {
@@ -229,7 +240,17 @@ const buttonDisabledFalse = () => {
     el.disabled = false;
     el.style.opacity = "1";
     el.style.cursor = "pointer";
+    el.style.pointerEvents = "auto";
   })
+  
+  uerySelectorAll('.file_delete')
+  fileDeleteBtn.forEach((el)=>{
+    el.disabled = false;
+    el.style.opacity = "1";
+    el.style.cursor = "pointer";
+    el.style.pointerEvents = "auto";
+  })
+
 }
 
 const downloadFile = async (str) => {

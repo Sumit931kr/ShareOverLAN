@@ -328,6 +328,7 @@ button>a,
 .inputcheckbox {
     width: 25px;
     aspect-ratio: 1/1;
+    cursor: pointer;
 }
 
 

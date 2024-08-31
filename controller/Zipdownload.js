@@ -30,7 +30,9 @@ const ZipDownload = async (req, res) => {
     });
 
     for (let i = 0; i < files.length; i++) {
-      const targetPath = path.join(__dirname, `../tmp/resource/`, files[i]);
+
+      const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', files[i]) : path.join(__dirname, `../tmp/resource/` , files[i]);
+      // const targetPath =  path.join(__dirname, `../tmp/resource/`, files[i]);
       if (fs.existsSync(targetPath)) {
         let realname = !files[i].includes(".") ? decodeURIComponent(atob(files[i])) : files[i];
         // console.log("realname "+ realname)

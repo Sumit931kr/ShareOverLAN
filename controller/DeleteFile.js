@@ -7,7 +7,7 @@ const DeleteFile = (req, res) => {
 
     let { name } = req.query;
 
-    const targetPath = path.join(__dirname, `../tmp/resource/` + name);
+    const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);;
    
 
     if (!fs.existsSync(targetPath)) {
@@ -15,7 +15,7 @@ const DeleteFile = (req, res) => {
     }
 
     try {
-        fs.unlink(path.join(__dirname, `../tmp/resource/` + name), (err) => {
+        fs.unlink(process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name), (err) => {
             if (err) {
                 console.log("some Error occured")
                 res.status(400).send("Error Occured")

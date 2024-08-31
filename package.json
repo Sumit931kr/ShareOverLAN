@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ansi-styles": "^5.0.0",
     "archiver": "^7.0.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -19,16 +21,32 @@
     "mime": "^2.4.4",
     "multer": "^1.4.5-lts.1",
     "mv": "^2.1.1",
-    "nodemon": "^3.0.2",
     "qrcode": "^1.5.3",
-    "shell-access": "^1.0.2",
-    "socket.io": "^4.7.5"
+    "shell-access": "^1.0.7",
+    "socket.io": "^4.7.5",
+    "strip-ansi": "^6.0.0"
   },
   "pkg": {
-    "scripts": [],
+    "scripts": [
+      "./client/js/*.js",
+      "./client/lib/*.js"
+    ],
     "assets": [
-      "/client/*",
-      "/tmp/*"
+      "./client/**/*.html",
+      "./client/**/*.css",
+      "./client/**/*.png",
+      "./client/**/*.mp3"
+    ],
+    "icon": "./client/assets/wifi.ico",
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64"
+    ],
+    "outputPath": "dist",
+    "external": [
+      "ansi-styles",
+      "strip-ansi",
+      "string-width"
     ]
   }
 }

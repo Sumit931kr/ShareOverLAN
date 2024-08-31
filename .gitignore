@@ -4,6 +4,7 @@
 /tmp/resource/*
 /tmp/*
 
+/dist
 /run.exe
 /run.exe *
 # /run.js

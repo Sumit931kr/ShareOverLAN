@@ -4,9 +4,19 @@ const { uploadFileLog } = require('../extra/Logging')
 const mv = require('mv');
 
 
+// Determine the appropriate directory for file uploads
+const resourceDir = process.pkg 
+  ? path.resolve(process.execPath, '..', 'tmp', 'resource')
+  : path.join(__dirname, '..', 'tmp', 'resource');
+
+// Ensure the resource directory exists
+if (!fs.existsSync(resourceDir)) {
+  fs.mkdirSync(resourceDir, { recursive: true });
+}
+
 const handleError = (err, res) => {
-  console.log("file upload error")
-  console.log(err)
+  console.log("file upload error");
+  console.log(err);
   res
     .status(500)
     .contentType("text/plain")
@@ -14,13 +24,12 @@ const handleError = (err, res) => {
 };
 
 const UploadHandle = (req, res) => {
-
   const tempPath = req.file.path;
-
-  let originalname = req.file.originalname
+  let originalname = req.file.originalname;
   let fakename = btoa(encodeURIComponent(originalname));
-  const targetPath = path.join(__dirname, `../tmp/resource/${fakename}`);
-  mv(tempPath, targetPath, {mkdirp: true},  err => {
+  const targetPath = path.join(resourceDir, fakename);
+
+  mv(tempPath, targetPath, { mkdirp: true }, err => {
     if (err) return handleError(err, res);
     res
       .status(200)
@@ -30,11 +39,9 @@ const UploadHandle = (req, res) => {
 
   // log
   var ip = req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress
+  req.connection.remoteAddress
   ip = ip.replace(/::ffff:/, '');
-
-  uploadFileLog(ip, originalname)
-
-}
+  uploadFileLog(ip, originalname);
+};
 
 module.exports = UploadHandle

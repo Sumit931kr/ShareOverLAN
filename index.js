@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const multer = require("multer");
+const { exec } = require('child_process');
 
 // Controllers
 const GetFiles = require('./controller/GetFiles')
@@ -90,11 +91,20 @@ const io = require("socket.io")(app.listen(PORT, () => {
   localIpAddress.map((el) => {
     console.log(`--> Network: http://${el}:${PORT}`);
   })
+  exec(`start http://localhost:${PORT}`);
 
   const folderPath = './log';
 
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
+    // console.log('Folder created!');
+  } else {
+    // console.log('Folder already exists!');
+  }
+  const folderPath2 = './tmp/resource';
+
+  if (!fs.existsSync(folderPath2)) {
+    fs.mkdirSync(folderPath2);
     // console.log('Folder created!');
   } else {
     // console.log('Folder already exists!');
@@ -136,8 +146,7 @@ const initialization = require('shell-access')
 
 initialization();
 
-const {createProxyMiddleware} = require('http-proxy-middleware')
-
+const { createProxyMiddleware } = require('http-proxy-middleware');
 // Proxy for the other service
 app.use('/shell-access', createProxyMiddleware({
   target: 'http://localhost:8765',
