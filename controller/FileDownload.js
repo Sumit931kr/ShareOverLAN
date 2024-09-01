@@ -40,6 +40,7 @@ const FileDownload = (req, res) => {
     var ip = req.headers['x-forwarded-for'] ||
       req.connection.remoteAddress
     ip = ip.replace(/::ffff:/, '');
+    ip = ip.replace("::1","localhost")
 
     downloadFileLog(ip,realname)
 

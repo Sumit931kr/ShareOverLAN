@@ -8,7 +8,7 @@ const existCheck = fs.constants.F_OK;
 
 const startingServerLog = (port) => {
 
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     const localIpAddress = getLocalIpAddress();
     // console.log(localIpAddress)
@@ -53,7 +53,7 @@ const startingServerLog = (port) => {
 }
 
 const getFileLog = (ip) => {
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Get All the Files\n`
@@ -68,7 +68,7 @@ const getFileLog = (ip) => {
 }
 
 const downloadFileLog = (ip, fileName) => {
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Download File [${fileName}]\n`
@@ -83,7 +83,7 @@ const downloadFileLog = (ip, fileName) => {
 }
 
 const uploadFileLog = (ip, fileName) => {
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Upload File [${fileName}]\n`
@@ -98,7 +98,7 @@ const uploadFileLog = (ip, fileName) => {
 }
 
 const ZipDownloadLog = (ip, filesName) => {
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Zip Download Files [${filesName}]\n`
@@ -113,7 +113,7 @@ const ZipDownloadLog = (ip, filesName) => {
 }
 
 const deleteFileLog = (ip, fileName) => {
-    let logFileName = `${new Date().toJSON().split('T')[0]}.txt`
+    let logFileName = `${new Date(new Date().getTime()+19800000).toJSON().split('T')[0]}.txt`
 
     let FileLogString =
         `[${getLocalTime()}] [${ip}] Delete File [${fileName}]\n`

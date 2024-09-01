@@ -98,16 +98,13 @@ const io = require("socket.io")(app.listen(PORT, () => {
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath);
     // console.log('Folder created!');
-  } else {
-    // console.log('Folder already exists!');
   }
+
   const folderPath2 = './tmp/resource';
 
   if (!fs.existsSync(folderPath2)) {
     fs.mkdirSync(folderPath2);
     // console.log('Folder created!');
-  } else {
-    // console.log('Folder already exists!');
   }
 
   startingServerLog(PORT)
