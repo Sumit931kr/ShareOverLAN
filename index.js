@@ -141,7 +141,7 @@ io.on('connection', socket => {
 // shell-access lib initialized
 const initialization = require('shell-access')
 
-initialization();
+initialization("sumit");
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 // Proxy for the other service
