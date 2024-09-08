@@ -83,6 +83,23 @@ const manageByte = (num) => {
   }
 }
 
+const timeFormat = (time) => {
+  if (!time) return "Invalid Date";
+
+  else {
+    return new Date(time).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }) + " " +
+      new Date(time).toLocaleTimeString({
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+
+  }
+}
+
 var DownloadableFileData = [];
 
 // get downlaod Files
@@ -100,6 +117,7 @@ const getDownloadFiles = async () => {
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
         <div class="file_name">${el.realname}</div>
         <div class="file_size">${manageByte(el.fileSize)}</div>
+        <div class="file_modified_date">${timeFormat(el.fileModifiedTime)}</div>
         <div class="file_delete"><img src="../assets/delete.png" data-filename="${el.fileName}" onclick="deleteFile(event)" /></div>
        <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
@@ -110,7 +128,7 @@ const getDownloadFiles = async () => {
 
     // console.log(mappedData)
   }
-  else if(data.length == 0){
+  else if (data.length == 0) {
     downlaodSection.innerHTML = ""
   }
   //  downloadButton();
@@ -149,7 +167,7 @@ const deleteFile = async (e) => {
     }
   }
   else {
-    
+
     let filename = e.target.getAttribute('data-filename');
     if (!filename) {
       console.log("couldn't fetch name from data attributes")
@@ -225,7 +243,7 @@ const buttonDisabledTrue = () => {
 
 
   let fileDeleteBtn = document.querySelectorAll('.file_delete')
-  fileDeleteBtn.forEach((el)=>{
+  fileDeleteBtn.forEach((el) => {
     el.disabled = true;
     el.style.opacity = "0.4";
     el.style.cursor = "no-drop";
@@ -242,9 +260,9 @@ const buttonDisabledFalse = () => {
     el.style.cursor = "pointer";
     el.style.pointerEvents = "auto";
   })
-  
+
   uerySelectorAll('.file_delete')
-  fileDeleteBtn.forEach((el)=>{
+  fileDeleteBtn.forEach((el) => {
     el.disabled = false;
     el.style.opacity = "1";
     el.style.cursor = "pointer";

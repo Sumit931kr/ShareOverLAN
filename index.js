@@ -3,7 +3,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const multer = require("multer");
-const { exec } = require('child_process');
 
 // Controllers
 const GetFiles = require('./controller/GetFiles')
@@ -25,6 +24,8 @@ const fs = require("fs");
 const { startingServerLog } = require('./extra/Logging');
 const Access = require('./controller/Access');
 const app = express();
+
+const { openBrowserBasedOnOS } = require('./extra/openBrowserBasedOnOS')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -82,6 +83,10 @@ app.get('/access', Access)
 const localIpAddress = getLocalIpAddress();
 
 
+
+
+
+
 const io = require("socket.io")(app.listen(PORT, () => {
   console.log("Server started at " + getLocalTime())
   console.log('Socket Serer Started && ');
@@ -91,7 +96,8 @@ const io = require("socket.io")(app.listen(PORT, () => {
   localIpAddress.map((el) => {
     console.log(`--> Network: http://${el}:${PORT}`);
   })
-  exec(`start http://localhost:${PORT}`);
+  // Use the function to open the URL
+  openBrowserBasedOnOS(`http://localhost:${PORT}`);
 
   const folderPath = './log';
 
