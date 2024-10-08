@@ -234,22 +234,25 @@ const clearAllcheckbox = () => {
 
 const buttonDisabledTrue = () => {
   let buttons = document.querySelectorAll('.file_download')
-  buttons.forEach((el) => {
-    el.disabled = true;
-    el.style.opacity = "0.4";
-    el.style.cursor = "no-drop";
-    el.style.pointerEvents = "none";
-  })
 
+  if (buttons?.length > 0) {
+    buttons.forEach((el) => {
+      el.disabled = true;
+      el.style.opacity = "0.4";
+      el.style.cursor = "no-drop";
+      el.style.pointerEvents = "none";
+    })
+  }
 
   let fileDeleteBtn = document.querySelectorAll('.file_delete')
-  fileDeleteBtn.forEach((el) => {
-    el.disabled = true;
-    el.style.opacity = "0.4";
-    el.style.cursor = "no-drop";
-    el.style.pointerEvents = "none";
-  })
-
+  if (fileDeleteBtn?.length > 0) {
+    fileDeleteBtn.forEach((el) => {
+      el.disabled = true;
+      el.style.opacity = "0.4";
+      el.style.cursor = "no-drop";
+      el.style.pointerEvents = "none";
+    })
+  }
 }
 
 const buttonDisabledFalse = () => {

@@ -125,35 +125,49 @@ const io = require("socket.io")(app.listen(PORT, () => {
 //   res.send("<h1>Good morning  Baccho</h1>")
 // });
 
+let messages = [];
+
+
 const users = {};
 io.on('connection', socket => {
   socket.on('new-user-joined', name => {
-    console.log("new user name is " + name);
+    // console.log("new user name is " + name);
     users[socket.id] = name;
     socket.broadcast.emit('user-joined', name);
+    messages.push({ name: name, message: 'Joined the chat', position: 'center' });
   })
   socket.on('send', message => {
     socket.broadcast.emit('receive', { message: message, name: users[socket.id] })
+    messages.push({ name: users[socket.id], message: message, position: 'left' });
   });
 
   socket.on('disconnect', message => {
     socket.broadcast.emit('left', users[socket.id])
+    messages.push({ name: users[socket.id], message: 'Left the Chat', position: 'center' });
     delete users[socket.id];
   });
 
 })
 
+app.get('/getoldmessages', (req, res) => {
+  let data = {
+    messages: messages,
+    users: users
+  }
+  res.send(JSON.stringify(data));
+})
+
 
 // shell-access lib initialized
-const initialization = require('shell-access')
+// const initialization = require('shell-access')
 
-initialization("sumit");
+// initialization("sumit");
 
-const { createProxyMiddleware } = require('http-proxy-middleware');
-// Proxy for the other service
-app.use('/shell-access', createProxyMiddleware({
-  target: 'http://localhost:8765',
-  ws: true,
-  changeOrigin: true,
-}));
+// const { createProxyMiddleware } = require('http-proxy-middleware');
+// // Proxy for the other service
+// app.use('/shell-access', createProxyMiddleware({
+//   target: 'http://localhost:8765',
+//   ws: true,
+//   changeOrigin: true,
+// }));
 

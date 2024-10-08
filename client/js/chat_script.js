@@ -103,7 +103,6 @@ pinMessage.append(div);
 
 
 
-
 // append the messgae in UI
 const append = (name, message, position) => {
 
@@ -138,7 +137,17 @@ const append = (name, message, position) => {
   messageCounter++;
 }
 
-
+// get old messages from server
+const getOldMessages = async () => { 
+  let response = await axios.get('/getoldmessages')
+  let oldmsg = response.data.messages;
+  let users = response.data.users;
+  console.log(users)
+  // console.log(oldmsg);
+  oldmsg.forEach(el => {
+    append(el.name, el.message, el.position)
+  })
+}
 
 const onlineuser = () => {
 
@@ -193,10 +202,15 @@ let name = prompt("Enter Your name to Join");
 if (!name) name = "random"+ Math.floor(Math.random() * 1000000);
 messageInput.focus()
 
-socket.emit('new-user-joined', name)
-if (name) {
-  append(name, 'Joined the chat', 'center')
-}
+getOldMessages();
+
+setTimeout(() => {
+  
+  socket.emit('new-user-joined', name)
+  if (name) {
+    append(name, 'Joined the chat', 'center')
+  }
+}, 500);
 
 
 socket.on('user-joined', name => {
