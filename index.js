@@ -97,7 +97,7 @@ const io = require("socket.io")(app.listen(PORT, () => {
     console.log(`--> Network: http://${el}:${PORT}`);
   })
   // Use the function to open the URL
-  openBrowserBasedOnOS(`http://localhost:${PORT}`);
+  // openBrowserBasedOnOS(`http://localhost:${PORT}`);
 
   const folderPath = './log';
 
@@ -126,7 +126,7 @@ const io = require("socket.io")(app.listen(PORT, () => {
 // });
 
 let messages = [];
-
+let actionsCount = 0;
 
 const users = {};
 io.on('connection', socket => {
@@ -136,10 +136,19 @@ io.on('connection', socket => {
     socket.broadcast.emit('user-joined', name);
     messages.push({ name: name, message: 'Joined the chat', position: 'center' });
   })
+
   socket.on('send', message => {
     socket.broadcast.emit('receive', { message: message, name: users[socket.id] })
     messages.push({ name: users[socket.id], message: message, position: 'left' });
   });
+
+  socket.on('fileschanged', message => {
+    console.log("inside fileschanged")
+    let actionsCount = message;
+
+    socket.broadcast.emit('fileschanged', actionsCount++);
+
+  })
 
   socket.on('disconnect', message => {
     socket.broadcast.emit('left', users[socket.id])

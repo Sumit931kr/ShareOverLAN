@@ -214,18 +214,16 @@ setTimeout(() => {
 
 
 socket.on('user-joined', name => {
-  // username.push(name);
-  // onlineuser();
-  append(`${name}`, '  Joined the chat', 'center');
+  append(`${name}`, 'Joined the chat', 'center');
 })
 
 socket.on('receive', data => {
-  append(`${data.name} `, `${data.message}`, 'left');
+  append(`${data.name}`, `${data.message}`, 'left');
 })
 
 socket.on('left', user => {
   console.log(user)
-  append(`${user} `, 'Left the Chat', 'center');
+  append(`${user}`, 'Left the Chat', 'center');
 })
 
 // const clear = document.getElementById('clear').addEventListener('click',()=>{

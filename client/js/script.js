@@ -9,17 +9,16 @@ const uploadSection = document.querySelector('.upload_section');
 // var outputText =  document.querySelector('.output-txt');
 let nearbyPeopleContainer = document.getElementById('nearby_people')
 const outPutContainer = document.getElementById('output-container');
+let downlaodSectionButton = document.getElementById('downlaod_section_button')
 
 
-// const https = require('https');
-// const agent = new https.Agent({  
-// rejectUnauthorized: false
-// });
 const axiosInstance = axios.create({
   responseType: 'blob',
   // httpsAgent: agent,
   // Other common configuration options can be set here
 });
+
+const socket = io('/');
 
 var shouldContinue = true;
 
@@ -131,6 +130,8 @@ const getDownloadFiles = async () => {
   else if (data.length == 0) {
     downlaodSection.innerHTML = ""
   }
+
+  downlaodSectionButton.classList.remove('red-dot')
   //  downloadButton();
 }
 
@@ -181,6 +182,8 @@ const deleteFile = async (e) => {
       console.log("file Deleted")
       getDownloadFiles()
     }
+
+    socket.emit('fileschanged', "send")
   }
 
 }
@@ -204,7 +207,7 @@ const getZipDownload = async () => {
   let body = { arr: JSON.stringify(downloadAbleFile) }
   // console.log(body)
   // axios.post('/zipdownload', body,{ responseType: 'blob' })
-  axios.get('/zipdownload?names' + JSON.stringify(downloadAbleFile));
+  // axios.get('/zipdownload?names' + JSON.stringify(downloadAbleFile));
 
   const link = document.createElement('a');
   link.href = `/zipdownload?names=${JSON.stringify(downloadAbleFile)}`
@@ -264,13 +267,15 @@ const buttonDisabledFalse = () => {
     el.style.pointerEvents = "auto";
   })
 
-  uerySelectorAll('.file_delete')
-  fileDeleteBtn.forEach((el) => {
-    el.disabled = false;
-    el.style.opacity = "1";
-    el.style.cursor = "pointer";
-    el.style.pointerEvents = "auto";
-  })
+  let fileDeleteBtn = document.querySelectorAll('.file_delete')
+  if (fileDeleteBtn?.length > 0) {
+    fileDeleteBtn.forEach((el) => {
+      el.disabled = false;
+      el.style.opacity = "1";
+      el.style.cursor = "pointer";
+      el.style.pointerEvents = "auto";
+    })
+  }
 
 }
 
@@ -400,6 +405,9 @@ const fileUploadCode = async ({ file, i }) => {
     .catch(function (err) {
       console.log('err ' + err)
     });
+
+  socket.emit('fileschanged', "send")
+
 
 }
 
@@ -560,45 +568,12 @@ document.querySelector('.main-container').addEventListener('paste', (e) => {
   }
 })
 
-// Example usage
-// downloadFile('exampleFileName');
+
+// socket functions
+
+socket.on('fileschanged', message => {
+  console.log(message);
+  downlaodSectionButton.classList.add('red-dot')
 
 
-// const downloadFile = async(str) =>{
-//   console.log(str);
-//   const options = {
-//     // Defines options for request
-
-//       responseType: 'blob',
-//       // For a file (e.g. image, audio), response should be read to Blob (default to JS object from JSON)
-
-//       onDownloadProgress: function(progressEvent) {
-//       // Function fires when there is download progress
-//       var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-//       console.log(percentCompleted)
-//           // console.log(Math.floor(progressEvent.loaded / progressEvent.total *100));
-//           // Logs percentage complete to the console
-
-//       }
-
-//     }
-
-//     axios.get('/filedownload?name='+str, options)
-//     // Request with options as second parameter
-//       .then(res => console.log(res.save()))
-//       .catch(err => console.log(err))
-
-
-
-// }
-
-
-// const searchNearbyPeople = async () => {
-//   console.log("just clicked");
-
-//   for (let i = 0; i < nearbyPeople.length; i++) {
-//     let str = `<h2> ${nearbyPeople[i].ip} </h2>`
-//     nearbyPeopleContainer.innerHTML += str;
-//   }
-// }
-
+})

@@ -331,6 +331,20 @@ button>a,
     cursor: pointer;
 }
 
+.red-dot{
+    position: relative;
+}
+.red-dot::after{
+    width: 10px;
+    height: 10px;
+    content: "";
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
 
 @media screen and (max-width: 767px) {
 
