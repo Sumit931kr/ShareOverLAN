@@ -3,6 +3,15 @@ const fs = require("fs");
 const { deleteFileLog } = require("../extra/Logging");
 
 
+function isBase64(str) {
+    try {
+      // Attempt to decode and encode to validate the string
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
+  }
+
 const DeleteFile = (req, res) => {
 
     let { name } = req.query;
@@ -26,7 +35,7 @@ const DeleteFile = (req, res) => {
             var ip = req.headers['x-forwarded-for'] ||
                 req.connection.remoteAddress
             ip = ip.replace(/::ffff:/, '');
-            let realname = !name.includes(".") ? atob(decodeURIComponent(name)) : name;
+            let realname = isBase64(name) ? atob(decodeURIComponent(name)) : name;
             deleteFileLog(ip, realname)
 
             res.status(200).send("File deleted successfully");

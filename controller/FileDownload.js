@@ -2,9 +2,22 @@ const path = require("path");
 const fs = require("fs");
 const { downloadFileLog } = require('../extra/Logging')
 
+
+function isBase64(str) {
+  try {
+    // Attempt to decode and encode to validate the string
+    return btoa(atob(str)) === str;
+  } catch (err) {
+    return false;
+  }
+}
+
+
 const FileDownload = (req, res) => {
 
   let { name } = req.query;
+  // console.log("file anme")
+  // console.log(name)
 
   const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);
   // console.log(targetPath)
@@ -18,7 +31,7 @@ const FileDownload = (req, res) => {
     const stats = fs.statSync(targetPath);
     const fileSize = stats.size;
 
-    let realname = !name.includes(".") ? atob(decodeURIComponent(name)) : name;
+    let realname = isBase64(name) ? atob(decodeURIComponent(name)) : name;
 
     res.setHeader('Content-Disposition', `attachment; filename="${realname}"`);
     res.setHeader('Content-Length', fileSize);

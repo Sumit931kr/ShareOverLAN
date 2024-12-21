@@ -38,7 +38,7 @@ const handleCopyMessage = (e) => {
 // take to the pinmessage 
 const takeMeToMessage = () => {
   let messageId = pinMessage.getAttribute('messid')
-  console.log(messageId);
+  // console.log(messageId);
   
   const link = document.createElement('a');
 
@@ -48,7 +48,7 @@ const takeMeToMessage = () => {
   // Make the link invisible
   link.style.display = 'none';
   
-  console.log(link)
+  // console.log(link)
   // Add the link to the document body
   document.body.appendChild(link);
   
@@ -80,14 +80,14 @@ const takeMeToMessage = () => {
 }
 
 const handleCancelPinMessage = (event) => {
-console.log(event.target)
+// console.log(event.target)
 event.target.parentElement.innerHTML = ""
 }
 
 // handle pin message function
 const handlePinMessage = (e, messageCounter) => {
   let element = e.target.parentElement.parentElement.parentElement.nextElementSibling 
-  console.log(element.innerText);
+  // console.log(element.innerText);
   pinMessage.innerHTML = `<b>Pin:</b> ${element.innerText}`;
   pinMessage.setAttribute('messId', `#messageCount-${messageCounter}`)
   let div = document.createElement('div');
@@ -142,7 +142,7 @@ const getOldMessages = async () => {
   let response = await axios.get('/getoldmessages')
   let oldmsg = response.data.messages;
   let users = response.data.users;
-  console.log(users)
+  // console.log(users)
   // console.log(oldmsg);
   oldmsg.forEach(el => {
     append(el.name, el.message, el.position)
@@ -222,7 +222,7 @@ socket.on('receive', data => {
 })
 
 socket.on('left', user => {
-  console.log(user)
+  // console.log(user)
   append(`${user}`, 'Left the Chat', 'center');
 })
 

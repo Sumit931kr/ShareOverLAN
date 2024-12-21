@@ -1,6 +1,16 @@
 const fs = require("fs");
 const { getFileLog } = require('../extra/Logging')
 
+function isBase64(str) {
+  try {
+    // Attempt to decode and encode to validate the string
+    return btoa(atob(str)) === str;
+  } catch (err) {
+    return false;
+  }
+}
+
+
 const GetFiles = (req, res) => {
   let resObjArr = [];
   fs.readdir('./tmp/resource', (err, files) => {
@@ -12,8 +22,8 @@ const GetFiles = (req, res) => {
       let fileSizeInBytes = stats.size;
       var fileModifiedTime = new Date(stats.mtime).getTime();
       // console.log(file)
-
-      let realname = !file.includes(".") ? decodeURIComponent(atob(file)) : file
+      // console.log(file)
+      let realname = isBase64(file) ? decodeURIComponent(escape(atob(file))) : file;
 
       obj['fileName'] = file;
       obj['fileSize'] = fileSizeInBytes;

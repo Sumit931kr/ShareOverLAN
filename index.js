@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const multer = require("multer");
+const qrcode = require('qrcode');
 
 // Controllers
 const GetFiles = require('./controller/GetFiles')
@@ -95,6 +96,9 @@ const io = require("socket.io")(app.listen(PORT, () => {
   console.log(`--> Local:   http://localhost:${PORT}`);
   localIpAddress.map((el) => {
     console.log(`--> Network: http://${el}:${PORT}`);
+    qrcode.toString(`http://${el}:${PORT}`,{type:'terminal'}, function (err, url) {
+      console.log(url)
+    })
   })
   // Use the function to open the URL
   // openBrowserBasedOnOS(`http://localhost:${PORT}`);
@@ -121,9 +125,7 @@ const io = require("socket.io")(app.listen(PORT, () => {
 });
 
 
-// app.get('/', (req, res) => {
-//   res.send("<h1>Good morning  Baccho</h1>")
-// });
+;
 
 let messages = [];
 let actionsCount = 0;
@@ -143,7 +145,7 @@ io.on('connection', socket => {
   });
 
   socket.on('fileschanged', message => {
-    console.log("inside fileschanged")
+    // console.log("inside fileschanged")
     let actionsCount = message;
 
     socket.broadcast.emit('fileschanged', actionsCount++);
@@ -179,4 +181,10 @@ app.get('/getoldmessages', (req, res) => {
 //   ws: true,
 //   changeOrigin: true,
 // }));
+
+
+
+
+
+// convert all the files into readbale file 
 

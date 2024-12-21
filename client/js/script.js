@@ -160,7 +160,7 @@ const deleteFile = async (e) => {
     let token = prompt("Enter the pass Code");
     if (!token) return
     let isAccess = await checkAccessToken(token);
-    console.log(isAccess)
+    // console.log(isAccess)
     if (!isAccess) {
       alert("Wrong token")
     } else {
@@ -174,12 +174,12 @@ const deleteFile = async (e) => {
       console.log("couldn't fetch name from data attributes")
       return
     }
-    console.log(filename)
+    // console.log(filename)
 
     const response = await axiosInstance.delete('/deletefile?name=' + filename);
-    console.log(response)
+    // console.log(response)
     if (response.status = 200) {
-      console.log("file Deleted")
+      // console.log("file Deleted")
       getDownloadFiles()
     }
 
@@ -413,7 +413,7 @@ const fileUploadCode = async ({ file, i }) => {
 
 const dropHandler = (ev) => {
   overlayHidden();
-  console.log("File(s) dropped");
+  // console.log("File(s) dropped");
   uploadButton();
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();

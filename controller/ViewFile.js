@@ -3,12 +3,12 @@ const ViewFile = (req,res) =>{
 
   const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `./tmp/resource/${name}`);
   try {
-    console.log(targetPath)
+    // console.log(targetPath)
     const videoPath = targetPath; // Update with the path to your video file
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
     const range = req.headers.range;
-    console.log(range)
+    // console.log(range)
 
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");

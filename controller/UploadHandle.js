@@ -26,8 +26,8 @@ const handleError = (err, res) => {
 const UploadHandle = (req, res) => {
   const tempPath = req.file.path;
   let originalname = req.file.originalname;
-  let fakename = btoa(encodeURIComponent(originalname));
-  const targetPath = path.join(resourceDir, fakename);
+  // let fakename = btoa(encodeURIComponent(originalname));
+  const targetPath = path.join(resourceDir, originalname);
 
   mv(tempPath, targetPath, { mkdirp: true }, err => {
     if (err) return handleError(err, res);
