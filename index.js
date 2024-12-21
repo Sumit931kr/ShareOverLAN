@@ -19,7 +19,24 @@ const getLocalTime = require('./extra/GetLocalTime')
 
 dotenv.config();
 
-const PORT = process.env.PORT || 6969
+// index.js
+const args = process.argv.slice(2); // Remove the first two default elements
+
+let port;
+let devMode = false // Default is false;
+args.forEach((arg, index) => {
+  console.log(arg)
+    if (arg.toLowerCase() === '--port' || arg.toLowerCase() === '-p') {
+        port = args[index + 1];
+    }
+    if (arg.toLowerCase() === '--dev') {
+        devMode = true;
+    }
+});
+
+
+
+const PORT = port || process.env.PORT || 6969
 const path = require("path");
 const fs = require("fs");
 const { startingServerLog } = require('./extra/Logging');
@@ -96,9 +113,11 @@ const io = require("socket.io")(app.listen(PORT, () => {
   console.log(`--> Local:   http://localhost:${PORT}`);
   localIpAddress.map((el) => {
     console.log(`--> Network: http://${el}:${PORT}`);
-    qrcode.toString(`http://${el}:${PORT}`,{type:'terminal'}, function (err, url) {
-      console.log(url)
-    })
+    if(!devMode){
+      qrcode.toString(`http://${el}:${PORT}`,{type:'terminal'}, function (err, url) {
+        console.log(url)
+      })
+    }
   })
   // Use the function to open the URL
   // openBrowserBasedOnOS(`http://localhost:${PORT}`);
