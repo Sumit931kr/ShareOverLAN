@@ -11,6 +11,25 @@ let nearbyPeopleContainer = document.getElementById('nearby_people')
 const outPutContainer = document.getElementById('output-container');
 let downlaodSectionButton = document.getElementById('downlaod_section_button')
 
+const streamAbleExtenstion = [
+  "mp4",  // MPEG-4 Video
+  "webm", // WebM Video
+  "mkv",  // Matroska Video
+  "mov",  // QuickTime Movie
+  "avi",  // Audio Video Interleave
+  "flv",  // Flash Video
+  "wmv",  // Windows Media Video
+  "m4v",  // MPEG-4 Video
+  "3gp",   // 3GPP Video
+  "mp3",  // MPEG Audio Layer III
+  "wav",  // Waveform Audio File
+  "aac",  // Advanced Audio Codec
+  "ogg",  // Ogg Vorbis
+  "flac", // Free Lossless Audio Codec
+  "m4a",  // MPEG-4 Audio
+  "wma"   // Windows Media Audio
+];
+
 
 const axiosInstance = axios.create({
   responseType: 'blob',
@@ -99,6 +118,13 @@ const timeFormat = (time) => {
   }
 }
 
+// check if th file able to stream or not 
+
+const isAbleToStream = (filename) => {
+  let extension = filename.split('.')[filename.split('.').length - 1]
+  return streamAbleExtenstion.includes(extension)
+}
+
 var DownloadableFileData = [];
 
 // get downlaod Files
@@ -111,10 +137,18 @@ const getDownloadFiles = async () => {
   if (data.length > 0) {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
       // console.log(el.fileName)
+      let streamBtn = isAbleToStream(el.fileName) ? `
+        <a class="view_file" href="/api/v1/viewfile?name=${el.fileName}" target="_blank">
+        <img src="../assets/share-icon.webp" />
+        </a>`
+        : "";
+ 
       return `
       <div class='item' key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
-        <div class="file_name">${el.realname}</div>
+        <div class="file_name">${el.realname} 
+           ${streamBtn}
+        </div>
         <div class="file_size">${manageByte(el.fileSize)}</div>
         <div class="file_modified_date">${timeFormat(el.fileModifiedTime)}</div>
         <div class="file_delete"><img src="../assets/delete.png" data-filename="${el.fileName}" onclick="deleteFile(event)" /></div>
@@ -150,6 +184,26 @@ const checkAccessToken = async (token) => {
     sessionStorage.removeItem('accessToken')
     return false
   }
+}
+
+// view file 
+
+const viewFile = async (e) => {
+  let filename = e.target.getAttribute('data-filename');
+  if (!filename) {
+    console.log("couldn't fetch name from data attributes")
+    return
+  }
+
+  console.log(filename)
+
+  const response = await axiosInstance.delete('/api/v1/deletefile?name=' + filename);
+  // console.log(response)
+  if (response.status = 200) {
+    // console.log("file Deleted")
+    getDownloadFiles()
+  }
+
 }
 
 // delete file function 

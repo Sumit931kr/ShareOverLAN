@@ -1,8 +1,13 @@
+const path = require('path')
+const fs = require('fs');
+
 const ViewFile = (req,res) =>{
   const { name } = req.query;
 
-  const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `./tmp/resource/${name}`);
+  const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);
+
   try {
+
     // console.log(targetPath)
     const videoPath = targetPath; // Update with the path to your video file
     const stat = fs.statSync(videoPath);
@@ -30,7 +35,7 @@ const ViewFile = (req,res) =>{
         'Content-Length': fileSize,
         'Content-Type': 'video/mp4',
       };
-      console.log("done")
+
       res.writeHead(200, head);
       fs.createReadStream(videoPath).pipe(res);
     }

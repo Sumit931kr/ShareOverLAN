@@ -52,14 +52,10 @@ if (!fs.existsSync(dir)) {
 }
 
 
-
 // Sending the index.html file 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'index.html'))
 })
-// app.get('/media', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client', 'media.html'))
-// })
 
 app.get('/chat', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'chat.html'))
@@ -70,7 +66,7 @@ app.use('/api/v1/', fileRoutes)
 
 const io = require("socket.io")(app.listen(PORT, () => {
   console.log("Server started at " + getLocalTime())
-  console.log('Socket Serer Started && ');
+  console.log('Socket Server Started && ');
   console.log("Server is Listening at ");
 
   console.log(`--> Local:   http://localhost:${PORT}`);

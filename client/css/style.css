@@ -233,6 +233,13 @@ input[type="file"] {
     text-transform: capitalize;
 }
 
+.file_name >a >img{
+    filter: invert(1);
+    width: 20px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
 .file_size {
     width: 20%;
 }
