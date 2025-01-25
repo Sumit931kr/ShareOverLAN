@@ -103,7 +103,7 @@ var DownloadableFileData = [];
 
 // get downlaod Files
 const getDownloadFiles = async () => {
-  const response = await axios.get('/getFiles');
+  const response = await axios.get('/api/v1/getFiles');
   let data = response.data;
   DownloadableFileData = [];
   DownloadableFileData = [...data]
@@ -118,7 +118,7 @@ const getDownloadFiles = async () => {
         <div class="file_size">${manageByte(el.fileSize)}</div>
         <div class="file_modified_date">${timeFormat(el.fileModifiedTime)}</div>
         <div class="file_delete"><img src="../assets/delete.png" data-filename="${el.fileName}" onclick="deleteFile(event)" /></div>
-       <a class="file_download" href="/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
+       <a class="file_download" href="/api/v1/filedownload?name=${el.fileName}" downlaod >Downlaod</a>
       </div>
         <hr/>
       `
@@ -138,7 +138,7 @@ const getDownloadFiles = async () => {
 const checkAccessToken = async (token) => {
   if (!token) return false
   try {
-    const response = await axiosInstance.get('/access?accessToken=' + token);
+    const response = await axiosInstance.get('/api/v1/access?accessToken=' + token);
     if (response.status == 200) {
       sessionStorage.setItem('accessToken', token)
       return true
@@ -176,7 +176,7 @@ const deleteFile = async (e) => {
     }
     // console.log(filename)
 
-    const response = await axiosInstance.delete('/deletefile?name=' + filename);
+    const response = await axiosInstance.delete('/api/v1/deletefile?name=' + filename);
     // console.log(response)
     if (response.status = 200) {
       // console.log("file Deleted")
@@ -206,11 +206,11 @@ const getZipDownload = async () => {
   // console.log(downloadAbleFile);
   let body = { arr: JSON.stringify(downloadAbleFile) }
   // console.log(body)
-  // axios.post('/zipdownload', body,{ responseType: 'blob' })
-  // axios.get('/zipdownload?names' + JSON.stringify(downloadAbleFile));
+  // axios.post('/api/v1/zipdownload', body,{ responseType: 'blob' })
+  // axios.get('/api/v1/zipdownload?names' + JSON.stringify(downloadAbleFile));
 
   const link = document.createElement('a');
-  link.href = `/zipdownload?names=${JSON.stringify(downloadAbleFile)}`
+  link.href = `/api/v1/zipdownload?names=${JSON.stringify(downloadAbleFile)}`
   link.setAttribute('download', zipName());
 
   // Simulate clicking the link to trigger the download
@@ -309,8 +309,8 @@ const downloadFile = async (str) => {
   };
 
   try {
-    // const response = await axios.get('/filedownload?name=' + str, options);
-    const response = await axiosInstance.get('/filedownload?name=' + str, options);
+    // const response = await axios.get('/api/v1/filedownload?name=' + str, options);
+    const response = await axiosInstance.get('/api/v1/filedownload?name=' + str, options);
 
     // console.log(response.data)
     // Create a blob from the response data
@@ -396,7 +396,7 @@ const fileUploadCode = async ({ file, i }) => {
 
   var formdata = new FormData();
   formdata.append('file', file)
-  await axios.post('/upload', formdata, config)
+  await axios.post('/api/v1/upload', formdata, config)
     .then(function (res) {
       count++;
       myNum++;
