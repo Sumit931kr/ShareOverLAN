@@ -49,7 +49,6 @@ let sizeMeter = {
   3: 'TB'
 }
 
-
 // format the second
 function formatSeconds(seconds) {
   if (isNaN(seconds) || seconds < 0) {
@@ -136,12 +135,11 @@ const getDownloadFiles = async () => {
 
   if (data.length > 0) {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
-      // console.log(el.fileName)
-      let streamBtn = isAbleToStream(el.fileName) ? `
-        <a class="view_file" href="/api/v1/viewfile?name=${el.fileName}" target="_blank">
+
+      let streamBtn = `
+        <a class="view_file" href=${isAbleToStream(el.fileName) ? `"/api/v1/viewfile?name=${el.fileName}"` : `"/public/${el.fileName}"`} target="_blank">
         <img src="../assets/share-icon.webp" />
         </a>`
-        : "";
  
       return `
       <div class='item' key="${index}"> 
