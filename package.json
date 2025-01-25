@@ -1,6 +1,6 @@
 {
-  "name": "server",
-  "version": "1.0.0",
+  "name": "shareoverlan",
+  "version": "3.2.1",
   "description": "",
   "main": "index.js",
   "bin": "index.js",

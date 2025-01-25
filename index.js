@@ -14,8 +14,10 @@ const getLocalTime = require('./extra/GetLocalTime')
 const fileRoutes = require('./routes/fileRoutes');
 const { startingServerLog } = require('./extra/Logging');
 const { openBrowserBasedOnOS } = require('./extra/openBrowserBasedOnOS');
+const {convertAllFilesToReadableFile} = require('./extra/ChangeFileName')
 
 dotenv.config();
+convertAllFilesToReadableFile();
 
 const args = process.argv.slice(2); // Remove the first two default elements
 let port;
