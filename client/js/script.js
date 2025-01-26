@@ -138,7 +138,7 @@ const getDownloadFiles = async () => {
 
       let streamBtn = `
         <a class="view_file" href=${isAbleToStream(el.fileName) ? `"/api/v1/viewfile?name=${el.fileName}"` : `"/public/${el.fileName}"`} target="_blank">
-        <img src="../assets/share-icon.webp" />
+        <img src="../assets/share-icon.png" />
         </a>`
  
       return `
