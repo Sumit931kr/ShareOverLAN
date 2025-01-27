@@ -44,7 +44,7 @@ app.use(cors());
 app.use('/download', express.static('./tmp/resource'))
 app.use(express.static(path.join(__dirname, 'client')));
 // Path to the folder you want to make public
-const publicFolder = path.join(__dirname, 'tmp/resource');
+const publicFolder = process.pkg ? path.resolve(process.execPath,'..','tmp','resource'): path.join(__dirname, 'tmp/resource');
 
 // Serve the folder publicly
 app.use('/public', express.static(publicFolder));

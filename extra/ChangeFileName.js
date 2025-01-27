@@ -34,7 +34,22 @@ function convertAllFilesToReadableFile() {
                         console.log(`File renamed from '${oldPath}' to '${newPath}'`);
                     });
 
-                } else {
+                } else if(file.includes('%')){
+
+                    const decodedFileName = decodeURIComponent(decodeURI(file));
+                    console.log("Decoded File Name:", decodedFileName);
+
+                    const oldPath = `./tmp/resource/${file}`;
+                    const newPath = `./tmp/resource/${decodedFileName}`;
+
+                    fs.rename(oldPath, newPath, (err) => {
+                        if (err) {
+                            console.error("Error renaming file:", err);
+                            return;
+                        }
+                        console.log(`File renamed from '${oldPath}' to '${newPath}'`);
+                    });
+
                     // If not Base64, leave it as is
                     // console.log("Regular File Name:", file);
                 }
