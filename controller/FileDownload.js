@@ -18,11 +18,20 @@ const FileDownload = (req, res) => {
   let { name } = req.query;
   // console.log("file anme")
   // console.log(name)
+  // console.log(req.originalUrl)
+  if(req.originalUrl.includes('&')){
+    // console.log("true")
+    let arr = req.originalUrl.split('=')
+    arr.shift()
+    name = decodeURIComponent(arr.join(''))
+  }
+  // console.log(name)
 
   const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);
   // console.log(targetPath)
 
   if (!fs.existsSync(targetPath)) {
+
     return res.status(404).send('File not found');
   }
 

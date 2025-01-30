@@ -2,7 +2,14 @@ const path = require('path')
 const fs = require('fs');
 
 const ViewFile = (req,res) =>{
-  const { name } = req.query;
+  let { name } = req.query;
+
+  if(req.originalUrl.includes('&')){
+    // console.log("true")
+    let arr = req.originalUrl.split('=')
+    arr.shift()
+    name = decodeURIComponent(arr.join(''))
+  }
 
   const targetPath = process.pkg ? path.resolve(process.execPath, '..', 'tmp', 'resource', name) : path.join(__dirname, `../tmp/resource/` + name);
 
