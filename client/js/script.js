@@ -11,6 +11,25 @@ let nearbyPeopleContainer = document.getElementById('nearby_people')
 const outPutContainer = document.getElementById('output-container');
 let downlaodSectionButton = document.getElementById('downlaod_section_button')
 
+const searchFileInput = document.getElementById('search_file_input')
+
+
+var DownloadableFileData = [];
+var RealDownloadAbleFileData = [];
+
+searchFileInput.addEventListener('input', (e) => {
+  let value = e.target.value.trim();
+  let matchingArr = RealDownloadAbleFileData.filter((el) => el.fileName.toLowerCase().includes(value.toLowerCase()))
+
+  DownloadableFileData = matchingArr
+
+  console.log(matchingArr)
+  clearAllcheckbox()
+  downloadAll.style.display = "none";
+  renderDataInDOM(matchingArr)
+  callme();
+})
+
 const streamAbleExtenstion = [
   "mp4",  // MPEG-4 Video
   "webm", // WebM Video
@@ -124,14 +143,10 @@ const isAbleToStream = (filename) => {
   return streamAbleExtenstion.includes(extension)
 }
 
-var DownloadableFileData = [];
+// render Data in DOM
 
-// get downlaod Files
-const getDownloadFiles = async () => {
-  const response = await axios.get('/api/v1/getFiles');
-  let data = response.data;
-  DownloadableFileData = [];
-  DownloadableFileData = [...data]
+const renderDataInDOM = (data) => {
+  console.log("rendering start")
 
   if (data.length > 0) {
     let mappedData = data.sort((b, a) => { return a?.fileModifiedTime - b?.fileModifiedTime }).map((el, index) => {
@@ -140,7 +155,7 @@ const getDownloadFiles = async () => {
         <a class="view_file" href=${isAbleToStream(el.fileName) ? `"/api/v1/viewfile?name=${el.fileName}"` : `"/public/${el.fileName}"`} target="_blank">
         <img src="../assets/share-icon.png" />
         </a>`
- 
+
       return `
       <div class='item' key="${index}"> 
         <div class="inputcheckboxdiv"> <input type="checkbox" class="inputcheckbox" value="${el.fileName}"/> </div>
@@ -162,6 +177,16 @@ const getDownloadFiles = async () => {
   else if (data.length == 0) {
     downlaodSection.innerHTML = ""
   }
+}
+
+// get downlaod Files
+const getDownloadFiles = async () => {
+  const response = await axios.get('/api/v1/getFiles');
+  let data = response.data;
+  DownloadableFileData = [];
+  DownloadableFileData = [...data]
+  RealDownloadAbleFileData = [...data]
+  renderDataInDOM(data)
 
   downlaodSectionButton.classList.remove('red-dot')
   //  downloadButton();
@@ -182,26 +207,6 @@ const checkAccessToken = async (token) => {
     sessionStorage.removeItem('accessToken')
     return false
   }
-}
-
-// view file 
-
-const viewFile = async (e) => {
-  let filename = e.target.getAttribute('data-filename');
-  if (!filename) {
-    console.log("couldn't fetch name from data attributes")
-    return
-  }
-
-  console.log(filename)
-
-  const response = await axiosInstance.delete('/api/v1/deletefile?name=' + filename);
-  // console.log(response)
-  if (response.status = 200) {
-    // console.log("file Deleted")
-    getDownloadFiles()
-  }
-
 }
 
 // delete file function 
@@ -257,9 +262,6 @@ const getZipDownload = async () => {
 
   // console.log(downloadAbleFile);
   let body = { arr: JSON.stringify(downloadAbleFile) }
-  // console.log(body)
-  // axios.post('/api/v1/zipdownload', body,{ responseType: 'blob' })
-  // axios.get('/api/v1/zipdownload?names' + JSON.stringify(downloadAbleFile));
 
   const link = document.createElement('a');
   link.href = `/api/v1/zipdownload?names=${JSON.stringify(downloadAbleFile)}`
@@ -283,8 +285,6 @@ const clearAllcheckbox = () => {
   checkArr.forEach((el) => {
     el.checked = false;
   })
-
-
 }
 
 const buttonDisabledTrue = () => {
@@ -330,77 +330,6 @@ const buttonDisabledFalse = () => {
   }
 
 }
-
-const downloadFile = async (str) => {
-  // console.log(str)
-  downloadArr.push(str);
-
-  let dcount = downloadArr.indexOf(str);
-
-  let div = document.createElement('div');
-  let innerHTML = `<div class="doutput-txt-${dcount}">${str}</div>
-                   <div class="doutput-${dcount} output-progess"></div>`
-
-  div.innerHTML = innerHTML;
-  downloadContainer.append(div)
-
-  const options = {
-    responseType: 'blob',
-
-    onDownloadProgress: function (progressEvent) {
-      var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-      // console.log(progressEvent)
-      var doutput = document.querySelector('.doutput-' + dcount);
-      // console.log(dcount)
-      doutput.style.width = `${percentCompleted}%`
-      doutput.innerHTML = percentCompleted + "%"
-      if (percentCompleted == 100) {
-        doutput.innerHTML = "File downloaded Successfully"
-      }
-    },
-  };
-
-  try {
-    // const response = await axios.get('/api/v1/filedownload?name=' + str, options);
-    const response = await axiosInstance.get('/api/v1/filedownload?name=' + str, options);
-
-    // console.log(response.data)
-    // Create a blob from the response data
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
-
-    // console.log(blob)
-    // Create a link element
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-
-    // Specify the desired file name and extension
-    link.download = str;
-
-    // Append the link to the document
-    document.body.appendChild(link);
-
-    // Trigger a click on the link to initiate the download
-    link.click();
-
-    // Remove the link from the document
-    document.body.removeChild(link);
-
-    // console.log('File download initiated successfully!');
-  } catch (error) {
-    console.error('Error downloading file:', error.message);
-    if (axios.isAxiosError(error)) {
-      console.error('Axios Error:', error.message);
-      // Handle Axios-specific errors (e.g., network errors)
-    } else {
-      console.error('General Error:', error.message);
-      // Handle other types of errors
-    }
-  }
-
-  let index = downloadArr.indexOf(str);
-  downloadArr[index] = downloadArr[index] + Math.random(1);
-
-};
 
 var uploadArr = [];
 
@@ -556,7 +485,7 @@ const callme = () => {
     // console.log(inputcheckboxArr)
     inputcheckboxArr.forEach((input) => {
       input.addEventListener('click', (el) => {
-        // console.log(el)
+        console.log(el)
         const inputchecked = document.querySelectorAll('.inputcheckboxdiv>input[type="checkbox"]:checked');
         // console.log(inputchecked.length)
         if (inputchecked.length > 0) {
@@ -567,7 +496,6 @@ const callme = () => {
           buttonDisabledFalse();
           downloadAll.style.display = "none";
         }
-
       })
     })
   }, 500);

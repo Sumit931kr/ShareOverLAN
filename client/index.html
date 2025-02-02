@@ -23,18 +23,33 @@
             <div id="nearby_people">
                 <div class="people-container" id="people-container">
                     <div class="header-section">
-                        <div class="downloadContainer">
-                            <div class="">
-
-                            </div>
-                        </div>
                         <div class="pc-header">
-                            <button class="pch-download" id="downlaod_section_button" onclick="downloadButton()">Downlaod Section</button>
+                            <button class="pch-download" id="downlaod_section_button"
+                                onclick="downloadButton()">Downlaod Section</button>
                             <!-- <div> ip </div> -->
                             <!-- <form method="post"> -->
                             <button class="pch-downloadAll" onclick="getZipDownload()">Download All</button>
                             <!-- </form> -->
-                            <button class="pch-upload" onclick="uploadButton()">Upload Section</button>
+                            <div class="search_and_upload_btn">
+                                <div class="input-container">
+                                    <input type="search" name="text" id="search_file_input" class="input" required=""
+                                        placeholder="Type to search...">
+                                    <div class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                            <title>Search</title>
+                                            <path
+                                                d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z"
+                                                fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                                stroke-width="32">
+                                            </path>
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <button class="pch-upload" onclick="uploadButton()">Upload Section</button>
+                            </div>
                         </div>
                     </div>
                     <div class="pc-body">
@@ -64,4 +79,5 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script async src="./js/script.js"></script>
+
 </html>

@@ -19,6 +19,12 @@ function isBase64(str) {
 const ZipDownload = async (req, res) => {
   try {
     let { names } = req.query;
+    if(req.originalUrl.includes('&')){
+      let arr = req.originalUrl.split('=')
+      arr.shift()
+      names = decodeURIComponent(arr.join(''))
+    }
+
     let arr = names
     let zipFileName = zipName();
     // console.log(zipFileName)

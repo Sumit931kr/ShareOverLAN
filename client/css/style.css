@@ -17,7 +17,6 @@ body {
     src: url(../assets/font/Nunito-VariableFont_wght.ttf);
 }
 
-
 .main-container {
     height: 100%;
     width: 100%;
@@ -233,7 +232,7 @@ input[type="file"] {
     text-transform: capitalize;
 }
 
-.file_name >a >img{
+.file_name>a>img {
     filter: invert(1);
     width: 20px;
     margin-left: 4px;
@@ -338,10 +337,11 @@ button>a,
     cursor: pointer;
 }
 
-.red-dot{
+.red-dot {
     position: relative;
 }
-.red-dot::after{
+
+.red-dot::after {
     width: 10px;
     height: 10px;
     content: "";
@@ -350,6 +350,65 @@ button>a,
     position: absolute;
     top: -5px;
     right: -5px;
+}
+
+/* search Icon CSS */
+
+/* From Uiverse.io by krlozCJ */
+.input-container {
+    position: relative;
+    --size-button: 40px;
+    color: white;
+}
+
+.input {
+    padding-left: var(--size-button);
+    height: var(--size-button);
+    font-size: 15px;
+    border: none;
+    color: #fff;
+    outline: none;
+    width: var(--size-button);
+    transition: all ease 0.3s;
+    background-color: #191A1E;
+    box-shadow: 1.5px 1.5px 3px #0e0e0e, -1.5px -1.5px 3px rgb(95 94 94 / 25%), inset 0px 0px 0px #0e0e0e, inset 0px -0px 0px #5f5e5e;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.input:focus,
+.input:not(:invalid) {
+    width: 250px;
+    cursor: text;
+    padding-right: 15px;
+    box-shadow: 0px 0px 0px #0e0e0e, 0px 0px 0px rgb(95 94 94 / 25%), inset 1.5px 1.5px 3px #0e0e0e, inset -1.5px -1.5px 3px #5f5e5e;
+}
+
+.input:focus+.icon,
+.input:not(:invalid)+.icon {
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.input-container .icon {
+    position: absolute;
+    width: var(--size-button);
+    height: var(--size-button);
+    top: 0;
+    left: 0;
+    padding: 8px;
+    pointer-events: none;
+}
+
+.input-container .icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.search_and_upload_btn {
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
 
