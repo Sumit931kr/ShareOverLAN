@@ -186,7 +186,16 @@ const getDownloadFiles = async () => {
   DownloadableFileData = [];
   DownloadableFileData = [...data]
   RealDownloadAbleFileData = [...data]
-  renderDataInDOM(data)
+
+  if(searchFileInput.value.trim()){ 
+    let value = searchFileInput.value.trim();
+    let matchingArr = RealDownloadAbleFileData.filter((el) => el.fileName.toLowerCase().includes(value.toLowerCase()))
+    DownloadableFileData = matchingArr
+    renderDataInDOM(matchingArr)
+  }
+  else{
+    renderDataInDOM(data)
+  }
 
   downlaodSectionButton.classList.remove('red-dot')
   //  downloadButton();
@@ -225,6 +234,12 @@ const deleteFile = async (e) => {
     }
   }
   else {
+
+    let isAccess = await checkAccessToken(accessToken);
+    if (!isAccess) {
+      alert("Wrong token, try again")
+      return
+    } 
 
     let filename = e.target.getAttribute('data-filename');
     if (!filename) {
