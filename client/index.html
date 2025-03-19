@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ondragover="dragOverHandler(event)">
 
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
     <script src="./lib/axios.min.js"> </script>
 </head>
 
-<body onload="downloadButton()" ondragover="dragOverHandler(event)">
+<body onload="downloadButton()" >
     <div class="overlay-text" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)"
         ondragleave="dragOverleave()">
         <!-- <img src="./drop.png" alt=""> -->
