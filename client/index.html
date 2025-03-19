@@ -12,13 +12,13 @@
     <script src="./lib/axios.min.js"> </script>
 </head>
 
-<body onload="downloadButton()">
+<body onload="downloadButton()" ondragover="dragOverHandler(event)">
     <div class="overlay-text" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)"
         ondragleave="dragOverleave()">
         <!-- <img src="./drop.png" alt=""> -->
         Drop file here...
     </div>
-    <div class="main-container" ondragover="dragOverHandler(event)">
+    <div class="main-container">
         <main>
             <div id="nearby_people">
                 <div class="people-container" id="people-container">

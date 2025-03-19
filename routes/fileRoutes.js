@@ -14,7 +14,7 @@ const Access = require('../controller/Access');
 const router = express.Router();
 
 const upload = multer({
-    dest: "/tmp/resource"
+    dest: "./temporary/resource"
   });
 
 router.get('/getfiles', GetFiles)
